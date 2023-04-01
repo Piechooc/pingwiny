@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uuid
 import openai
 import os
@@ -46,10 +47,18 @@ archive = {}
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
-    new_id = uuid.uuid4()
+    new_id = str(uuid.uuid4())
     users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
