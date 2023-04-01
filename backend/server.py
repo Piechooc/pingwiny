@@ -22,7 +22,6 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
 chats = {
     "chat_id1_mock": {
@@ -118,7 +117,7 @@ async def get_map_state(user_id):
 
 
 @app.get("/getchat")
-async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse | JSONResponse:
+async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse:
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
         return GetChatResponse(msg=chat["messages"])
@@ -136,7 +135,7 @@ async def join_chat(join_chat_request: JoinChatRequest):
 
 
 @app.post("/createchat")
-async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatResponse | JSONResponse:
+async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatResponse:
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
         chats[new_chat_id] = {"users_ids": {create_chat_request.user_id1: True, create_chat_request.user_id2: True},
@@ -176,18 +175,3 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
-
-
-@app.route('/get_map_state', methods=['GET'])
-def get_map_state(user_id: int):
-    return get_map_state(user_id)
-
-
-@app.route('/write_msg', methods=['PUT'])
-def write_msg(user_id: int, chat_id: int, msg: str):
-    return write_msg(user_id, chat_id, msg)
-
-
-@app.route('/leave_chat', methods=['PUT'])
-def leave_chat(user_id: int, chat_id: str):
-    return leave_chat(user_id, chat_id)
