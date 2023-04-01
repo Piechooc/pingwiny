@@ -11,9 +11,11 @@ export const App = () =>
   const blurFilter = useMemo(() => new BlurFilter(4), []);
 
   return (
-    <Stage>
+    <div style={{display: 'flex', justifyContent: 'flex-end' }}>
+    <Stage width={1100} height={750}
+        options={{ backgroundColor: "e0ebeb", antialias: true }}>
       <Sprite
-        image="https://pixijs.io/pixi-react/img/bunny.png"
+        // image="https://pixijs.io/pixi-react/img/bunny.png"
         x={400}
         y={270}
         anchor={{ x: 0.5, y: 0.5 }}
@@ -23,6 +25,7 @@ export const App = () =>
         <Text text="Hello World" anchor={{ x: 0.5, y: 0.5 }} filters={[blurFilter]} />
       </Container>
     </Stage>
+    </div>
   );
 };
 
