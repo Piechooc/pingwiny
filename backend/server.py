@@ -115,6 +115,7 @@ async def get_map_state(user_id):
 def update_status(user_id, status):
     users[user_id]["status"] = status
 
+
 @app.get("/getchat")
 async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse | JSONResponse:
     chat = chats[get_chat_request.chat_id]
@@ -156,7 +157,7 @@ async def write_msg(writeMessageRequest: WriteMessageRequest):
 #         chat += message_data["message"]
 
 
-@app.put("/leave_chat")
+@app.put("/leavechat")
 async def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
