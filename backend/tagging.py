@@ -1,9 +1,11 @@
 
 
 import openai
+import os
 
 
-openai.api_key = "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"
+
+openai.api_key = "key"
 
 if __name__ == "__main__":
     response = openai.Completion.create(
