@@ -9,38 +9,40 @@ on:
   workflow_dispatch:
 
 jobs:
-#  build_react:
-#    runs-on: ubuntu-latest
-#
-#    defaults:
-#      run:
-#        working-directory: ./frontend/pingwiny
-#
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Node.js
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: '16.x'
-#          cache: 'npm'
-#          cache-dependency-path: './frontend/pingwiny/package-lock.json'
-#
-#      - name: Install dependencies
-#        run: npm install --force
-#
-#      - name: Build
-#        run: npm run build
-#
-#      - name: Upload artifact for deployment job
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: 'react-app'
-#          path: './frontend/pingwiny/build'
+  build_react:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend/pingwiny
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          cache: 'npm'
+          cache-dependency-path: './frontend/pingwiny/package-lock.json'
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'react-app'
+          path: './frontend/pingwiny/build'
 
   build_python:
     runs-on: ubuntu-latest
+
+    needs: build_react
 
     defaults:
       run:
@@ -71,9 +73,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: List of directories
-        run: ls -lah
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -82,34 +81,34 @@ jobs:
             ./backend
             !./backend/venv/
 
-#  deploy_react:
-#    runs-on: ubuntu-latest
-#
-#    needs: build_python
-#
-#    environment:
-#      name: 'Production'
-#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-#
-#    steps:
-#      - name: Download artifact from build job
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: 'react-app'
-#
-#      - name: Deploy to Azure Web App
-#        id: deploy-to-webapp
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: 'penguins-agh'
-#          slot-name: 'Production'
-#          publish-profile: '<publishData><publishProfile profileName="penguins-agh - Web Deploy" publishMethod="MSDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" msdeploySite="penguins-agh" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-am2-611.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="penguins-agh\$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - Zip Deploy" publishMethod="ZipDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>'
-#          package: '.'
+  deploy_react:
+    runs-on: ubuntu-latest
+
+    needs: build_python
+
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: 'react-app'
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'penguins-agh'
+          slot-name: 'Production'
+          publish-profile: '<publishData><publishProfile profileName="penguins-agh - Web Deploy" publishMethod="MSDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" msdeploySite="penguins-agh" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-am2-611.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="penguins-agh\$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - Zip Deploy" publishMethod="ZipDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>'
+          package: '.'
 
   deploy_python:
     runs-on: ubuntu-latest
 
-    needs: build_python
+    needs: deploy_react
 
     environment:
       name: 'Production'
