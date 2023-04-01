@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class LeaveRequest(BaseModel):
+class LeaveChatRequest(BaseModel):
     user_id: str
     chat_id: str

@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 import uuid
 
-from backend.request import LeaveChatRequest
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
 from backend.request.JoinChatRequest import JoinChatRequest
-from backend.request.LeaveChatRequest import LeaveRequest
+from backend.request.LeaveChatRequest import LeaveChatRequest
 from backend.request.UpdateStatusRequest import UpdateStatusRequest
 from backend.response.CreateChatResponse import CreateChatResponse
 from backend.response.GetChatResponse import GetChatResponse
@@ -149,10 +148,12 @@ async def write_msg(writeMessageRequest: WriteMessageRequest):
     chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
-# def merge_messages(chat_id: str):
-#     chat = ""
-#     for message_data in chats[chat_id]["messages"]:
-#         chat += message_data["message"]
+
+def merge_messages(chat_id: str):
+    chat = ""
+    for message_data in chats[chat_id]["messages"]:
+        chat += message_data["message"] + '\n'
+    return chat
 
 
 @app.put("/leave_chat")
@@ -165,7 +166,7 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
         archive[chat_id] = chat
-        # tags =
+        tags = tag_chat()
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
