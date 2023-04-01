@@ -8,7 +8,7 @@ def tag_chat(chat: str):
     try:
         response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=f"Generate a maximum of 3 tags for this text:\n\n{chat}",
+            prompt=f"Generate one tag for this text:\n\n{chat}",
             temperature=0.5,
             max_tokens=60,
             top_p=1.0,
@@ -18,5 +18,5 @@ def tag_chat(chat: str):
     except:
         return "Error"
     text_response = response["choices"][0]["text"]
-    tags = text_response.split("#")[-3:]
-    return tags
+    tag = text_response.split("#")[-1]
+    return tag

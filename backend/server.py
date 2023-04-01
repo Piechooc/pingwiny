@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import uuid
+import openai
+import os
 
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
@@ -11,11 +13,15 @@ from backend.response.GetChatResponse import GetChatResponse
 from backend.response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
+from tagging import tag_chat
 
 from backend.request.MoveRequest import MoveRequest
 from backend.request.WriteMessageRequest import WriteMessageRequest
 from backend.response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
 from backend.response.UserLoginResponse import UserLoginResponse
+
+openai.api_key = os.environ.get("OPENAI_API")
+
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
 chats = {
@@ -165,8 +171,10 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
-        archive[chat_id] = chat
-        # tags = tag_chat()
+        tag = tag_chat(chat)
+        tagged_chats = archive.get(tag, dict())
+        tagged_chats[chat_id] = chat
+        archive[tag] = tagged_chats
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
