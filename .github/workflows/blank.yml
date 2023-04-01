@@ -106,29 +106,29 @@ jobs:
 #          publish-profile: '<publishData><publishProfile profileName="penguins-agh - Web Deploy" publishMethod="MSDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" msdeploySite="penguins-agh" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-am2-611.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="penguins-agh\$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh - Zip Deploy" publishMethod="ZipDeploy" publishUrl="penguins-agh.scm.azurewebsites.net:443" userName="$penguins-agh" userPWD="z75HiDqdqChbuZPXjJ2XoYLJYld69ekm8nNMmwikT1WxnG0iy6pPoRQser5T" destinationAppUrl="http://penguins-agh.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>'
 #          package: '.'
 
-#  deploy_python:
-#    runs-on: ubuntu-latest
-#
+  deploy_python:
+    runs-on: ubuntu-latest
+
 #    needs: deploy_react
-#
-#    environment:
-#      name: 'Production'
-#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-#
-#    steps:
-#      - name: Download artifact from build job
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: 'python-app'
-#          path: .
-#
-#      - name: Listing directories
-#        run: ls -lah
-#
-#      - name: Deploy to Azure Web App
-#        id: deploy-to-webapp
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: 'penguins-agh-rest'
-#          publish-profile: <publishData><publishProfile profileName="penguins-agh-rest - Web Deploy" publishMethod="MSDeploy" publishUrl="penguins-agh-rest.scm.azurewebsites.net:443" msdeploySite="penguins-agh-rest" userName="$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh-rest - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-am2-625.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="penguins-agh-rest\$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh-rest - Zip Deploy" publishMethod="ZipDeploy" publishUrl="penguins-agh-rest.scm.azurewebsites.net:443" userName="$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
-#          package: '.'
+
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: 'python-app'
+          path: .
+
+      - name: Listing directories
+        run: ls -lah
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'penguins-agh-rest'
+          publish-profile: <publishData><publishProfile profileName="penguins-agh-rest - Web Deploy" publishMethod="MSDeploy" publishUrl="penguins-agh-rest.scm.azurewebsites.net:443" msdeploySite="penguins-agh-rest" userName="$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh-rest - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-am2-625.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="penguins-agh-rest\$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="penguins-agh-rest - Zip Deploy" publishMethod="ZipDeploy" publishUrl="penguins-agh-rest.scm.azurewebsites.net:443" userName="$penguins-agh-rest" userPWD="jZfPhb07nbZHb1FizgHqmDlcoodGzf5MqkFl1RpeocGdPwMh94WgufWrdqTB" destinationAppUrl="http://penguins-agh-rest.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>
+          package: '.'
