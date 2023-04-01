@@ -19,7 +19,7 @@ jobs:
         run: ls -lah
 
       - name: change directory
-        run: cd /frontend/pingwiny
+        run: cd frontend/pingwiny
 
       - name: npm install
         run: npm install
