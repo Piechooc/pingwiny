@@ -79,8 +79,8 @@ jobs:
         with:
           name: 'python-app'
           path: |
-            .
-            !venv/
+            ./backend
+            !./backend/venv/
 
 #  deploy_react:
 #    runs-on: ubuntu-latest
