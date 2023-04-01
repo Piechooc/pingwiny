@@ -84,7 +84,7 @@ jobs:
   deploy_react:
     runs-on: ubuntu-latest
     
-    needs: deploy_react
+    needs: build_python
 
     environment:
       name: 'Production'
