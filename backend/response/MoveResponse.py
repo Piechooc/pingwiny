@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class UserLoginResponse(BaseModel):
+class MoveResponse(BaseModel):
     id: str
     nickname: str
     x: int
