@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 import uuid
 
+from starlette import status
+from starlette.responses import JSONResponse
+
+from backend.request.MoveRequest import MoveRequest
 from backend.response.UserLoginResponse import UserLoginResponse
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
@@ -34,9 +38,11 @@ async def user_login(nickname: str) -> UserLoginResponse:
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
 
-def register_move(user_id, x, y):
-    users[user_id]["x"] = x
-    users[user_id]["y"] = y
+@app.put("/move/{moveRequest}")
+async def register_move(moveRequest: MoveRequest):
+    users[moveRequest.id]["x"] = moveRequest.x
+    users[moveRequest.id]["y"] = moveRequest.y
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
 def get_map_state(user_id):
