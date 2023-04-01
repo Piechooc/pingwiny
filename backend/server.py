@@ -52,12 +52,13 @@ def get_map_state(user_id):
 
     users_response = []
     for user_id, user_dict in users.items():
-        user = User()
-        user.id = user_id
-        user.x = user_dict["x"]
-        user.y = user_dict["y"]
-        user.status = user_dict["status"]
-        user.nickname = user_dict["nickname"]
+        user = User(
+            id=user_id,
+            x=user_dict["x"],
+            y=user_dict["y"],
+            status=user_dict["status"],
+            nickname=user_dict["nickname"]
+        )
         users_response.append(user)
 
     chat_clouds = []
@@ -73,22 +74,24 @@ def get_map_state(user_id):
 
         users_in_chat = []
         for user_id, is_active in chat_dict["users_ids"].items():
-            user_in_chat = UserInChat()
-            user_in_chat.id = user_id
-            user_in_chat.isActive = is_active
+            user_in_chat = UserInChat(
+                id=user_id,
+                isActive=is_active,
+            )
             users_in_chat.append(user_in_chat)
 
-        chat_cloud = ChatCloud()
-        chat_cloud.chat_id = chat_id
-        chat_cloud.users_in_chat = users_in_chat
-        chat_cloud.can_access = can_access
-        chat_cloud.text_in_cloud = text_in_cloud
+        chat_cloud = ChatCloud(
+            chat_id=chat_id,
+            users_in_chat=users_in_chat,
+            can_access=can_access,
+            text_in_cloud=text_in_cloud,
+        )
         chat_clouds.append(chat_cloud)
 
-    map_state_response = MapStateResponse()
-    map_state_response.chat_clouds = chat_clouds
-    map_state_response.users = users
-    return map_state_response
+    return MapStateResponse(
+        chat_clouds=chat_clouds,
+        users=users,
+    )
 
 
 def update_status(user_id, status):
