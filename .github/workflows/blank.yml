@@ -12,6 +12,10 @@ jobs:
   react_app:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./frontend/pingwiny
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -22,22 +26,18 @@ jobs:
           node-version: '16.x'
 
       - name: Install dependencies
-        working-directory: ./frontend/pingwiny
         run: npm install
 
       - name: Build
-        working-directory: ./frontend/pingwiny
         run: npm run build
 
       - name: Zip artifact for deployment
-        working-directory: ./frontend/pingwiny
         run: zip release.zip ./build/* -r
 
       - name: Upload artifact for deployment job
-        working-directory: ./frontend/pingwiny
         uses: actions/upload-artifact@v2
         with:
-          name: node-app
+          name: 'penguins-agh'
           path: release.zip
   deploy:
     runs-on: ubuntu-latest
