@@ -3,22 +3,22 @@ import uuid
 import openai
 import os
 
-from backend.request.CreateChatRequest import CreateChatRequest
-from backend.request.GetChatRequest import GetChatRequest
-from backend.request.JoinChatRequest import JoinChatRequest
-from backend.request.LeaveChatRequest import LeaveChatRequest
-from backend.request.UpdateStatusRequest import UpdateStatusRequest
-from backend.response.CreateChatResponse import CreateChatResponse
-from backend.response.GetChatResponse import GetChatResponse
-from backend.response.LeaveChatResponse import LeaveChatResponse
+from request.LeaveChatRequest import LeaveChatRequest
+from request.CreateChatRequest import CreateChatRequest
+from request.GetChatRequest import GetChatRequest
+from request.JoinChatRequest import JoinChatRequest
+from request.UpdateStatusRequest import UpdateStatusRequest
+from response.CreateChatResponse import CreateChatResponse
+from response.GetChatResponse import GetChatResponse
+from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 from tagging import tag_chat
 
-from backend.request.MoveRequest import MoveRequest
-from backend.request.WriteMessageRequest import WriteMessageRequest
-from backend.response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
-from backend.response.UserLoginResponse import UserLoginResponse
+from request.MoveRequest import MoveRequest
+from request.WriteMessageRequest import WriteMessageRequest
+from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
+from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
@@ -62,9 +62,9 @@ async def update_status(update_status_request: UpdateStatusRequest):
 
 
 @app.put("/move/{moveRequest}")
-async def move(moveRequest: MoveRequest):
-    users[moveRequest.id]["x"] = moveRequest.x
-    users[moveRequest.id]["y"] = moveRequest.y
+async def move(move_request: MoveRequest):
+    users[move_request.id]["x"] = move_request.x
+    users[move_request.id]["y"] = move_request.y
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
@@ -117,10 +117,6 @@ async def get_map_state(user_id):
     )
 
 
-def update_status(user_id, status):
-    users[user_id]["status"] = status
-
-
 @app.get("/getchat")
 async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse | JSONResponse:
     chat = chats[get_chat_request.chat_id]
@@ -139,7 +135,7 @@ async def join_chat(join_chat_request: JoinChatRequest):
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.post("/userlogin")
+@app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatResponse | JSONResponse:
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
@@ -151,9 +147,9 @@ async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatRespo
 
 
 @app.put("/writemessage/{writeMessageRequest}")
-async def write_msg(writeMessageRequest: WriteMessageRequest):
-    chat = chats[writeMessageRequest.chat_id]
-    chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
+async def write_msg(write_message_request: WriteMessageRequest):
+    chat = chats[write_message_request.chat_id]
+    chat["messages"].append({"user-id": write_message_request.user_id, "message": write_message_request.message})
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
@@ -180,3 +176,18 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
+
+
+@app.route('/get_map_state', methods=['GET'])
+def get_map_state(user_id: int):
+    return get_map_state(user_id)
+
+
+@app.route('/write_msg', methods=['PUT'])
+def write_msg(user_id: int, chat_id: int, msg: str):
+    return write_msg(user_id, chat_id, msg)
+
+
+@app.route('/leave_chat', methods=['PUT'])
+def leave_chat(user_id: int, chat_id: str):
+    return leave_chat(user_id, chat_id)
