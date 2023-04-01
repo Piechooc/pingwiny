@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import uuid
 
+from backend.request import LeaveChatRequest
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
 from backend.request.JoinChatRequest import JoinChatRequest
