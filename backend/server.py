@@ -5,7 +5,6 @@ from backend.request import LeaveChatRequest
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
 from backend.request.JoinChatRequest import JoinChatRequest
-from backend.request.LeaveChatRequest import LeaveRequest
 from backend.request.UpdateStatusRequest import UpdateStatusRequest
 from backend.response.CreateChatResponse import CreateChatResponse
 from backend.response.GetChatResponse import GetChatResponse
@@ -112,9 +111,6 @@ async def get_map_state(user_id):
     )
 
 
-def update_status(user_id, status):
-    users[user_id]["status"] = status
-
 @app.get("/getchat")
 async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse | JSONResponse:
     chat = chats[get_chat_request.chat_id]
@@ -133,7 +129,7 @@ async def join_chat(join_chat_request: JoinChatRequest):
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.post("/userlogin")
+@app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatResponse | JSONResponse:
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
@@ -149,6 +145,7 @@ async def write_msg(writeMessageRequest: WriteMessageRequest):
     chat = chats[writeMessageRequest.chat_id]
     chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
+
 
 # def merge_messages(chat_id: str):
 #     chat = ""
@@ -170,3 +167,7 @@ async def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
+
+
+# if __name__ == "__main__":
+#     app.run()
