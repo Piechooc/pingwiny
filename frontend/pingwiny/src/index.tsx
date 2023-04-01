@@ -10,8 +10,8 @@ const initialState = {
   desks: [
     { x: 100, y: 100, taken: false },
     { x: 100, y: 300, taken: false },
-    { x: 100, y: 500, taken: false },
     { x: 400, y: 100, taken: false },
+    { x: 100, y: 300, taken: false },
     { x: 400, y: 300, taken: false },
     // Add more desks here
   ],
@@ -34,7 +34,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
       <Provider store={store} children={<App/>} />
-        
   </React.StrictMode>
 );
 

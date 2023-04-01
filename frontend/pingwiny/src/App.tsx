@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BlurFilter } from 'pixi.js';
 import { Stage, Container, Sprite, Text } from '@pixi/react';
 import { useMemo } from 'react';
 import Desk from './types/Desk';
