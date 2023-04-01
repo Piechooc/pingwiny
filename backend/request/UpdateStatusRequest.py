@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class UpdateStatusRequest(BaseModel):
-    user_id: int
+    user_id: str
     status: str

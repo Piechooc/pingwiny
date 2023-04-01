@@ -2,4 +2,4 @@ from pydantic import BaseModel
 
 
 class CreateChatResponse(BaseModel):
-    chat_id: int
+    chat_id: str
