@@ -63,7 +63,8 @@ async def move(moveRequest: MoveRequest):
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-def get_map_state(user_id):
+@app.get("/getmapstate")
+async def get_map_state(user_id):
     MAX_LENGTH_IN_CLOUD = 20
     LAST_ITEM = -1
 
@@ -156,7 +157,7 @@ async def write_msg(writeMessageRequest: WriteMessageRequest):
 
 
 @app.put("/leave_chat")
-def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
+async def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
     chat["users_ids"][user_id] = False
