@@ -4,6 +4,7 @@ import uuid
 from starlette import status
 from starlette.responses import JSONResponse
 
+from backend.request import LeaveRequest
 from backend.request.MoveRequest import MoveRequest
 from backend.response.UserLoginResponse import UserLoginResponse
 from backend.response.LeaveChatResponse import LeaveChatResponse
@@ -99,7 +100,8 @@ def write_msg(user_id, chat_id, msg):
     chat["messages"].append({"user-id": user_id, "message": msg})
 
 @app.put("/leave_chat")
-def leave_chat(user_id, chat_id) -> LeaveChatResponse:
+def leave_chat(leave_request: LeaveRequest) -> LeaveChatResponse:
+    user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
     chat["users_ids"][user_id] = False
     chat["active_users_count"] -= 1
