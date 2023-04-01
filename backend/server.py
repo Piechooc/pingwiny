@@ -4,9 +4,11 @@ import uuid
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
 from backend.request.JoinChatRequest import JoinChatRequest
+from backend.request.LeaveRequest import LeaveRequest
 from backend.request.UpdateStatusRequest import UpdateStatusRequest
 from backend.response.CreateChatResponse import CreateChatResponse
 from backend.response.GetChatResponse import GetChatResponse
+from backend.response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 
@@ -32,6 +34,8 @@ chats = {
         "is_private": False
     },
 }
+
+archive = {}
 
 app = FastAPI()
 
@@ -89,15 +93,26 @@ def write_msg(user_id, chat_id, msg):
     chat = chats[chat_id]
     chat["messages"].append({"user-id": user_id, "message": msg})
 
+# def merge_messages(chat_id: str):
+#     chat = ""
+#     for message_data in chats[chat_id]["messages"]:
+#         chat += message_data["message"]
 
-def leave_chat(user_id, chat_id):
+
+@app.put("/leave_chat")
+def leave_chat(leave_request: LeaveRequest) -> LeaveChatResponse:
+    user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
     chat["users_ids"][user_id] = False
     chat["active_users_count"] -= 1
 
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
-        pass
+        archive[chat_id] = chat
+        # tags =
+        chats.pop(chat_id)
+        return LeaveChatResponse(active=False)
+    return LeaveChatResponse(active=True)
 
 
 @app.route('/get_map_state', methods=['GET'])
