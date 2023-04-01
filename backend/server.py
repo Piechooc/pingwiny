@@ -5,6 +5,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from backend.request.MoveRequest import MoveRequest
+from backend.request.WriteMessageRequest import WriteMessageRequest
 from backend.response.UserLoginResponse import UserLoginResponse
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
@@ -75,9 +76,11 @@ def create_chat(user_id1, user_id2, is_private):
     # TODO if not then return error or smth idk
 
 
-def write_msg(user_id, chat_id, msg):
-    chat = chats[chat_id]
-    chat["messages"].append({"user-id": user_id, "message": msg})
+@app.put("/writemessage/{writeMessageRequest}")
+async def write_msg(writeMessageRequest: WriteMessageRequest):
+    chat = chats[writeMessageRequest.chat_id]
+    chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
 def leave_chat(user_id, chat_id):
