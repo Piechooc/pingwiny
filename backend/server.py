@@ -7,8 +7,32 @@ from backend.response.UserLoginResponse import UserLoginResponse
 app = Flask(__name__, template_folder="../frontend/")
 
 
-users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
-chats = {"chat_id1_mock": {"users_ids": [], "messages": [], "is_private": False}}
+users = {
+    "user_id1_mock": {
+        "nickname": "mock",
+        "x": 0,
+        "y": 0,
+        "status": "available"
+        },
+}
+chats = {
+    "chat_id1_mock": {
+        "users_ids": [],
+        "messages": [
+            {
+                "user-id": 1,
+                "message": "hello",
+            },
+            {
+                "user-id": 2,
+                "message": "hi",
+            }
+
+        ],
+        "is_private": False
+    },
+}
+
 
 
 app = FastAPI()
