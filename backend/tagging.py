@@ -1,7 +1,10 @@
 import openai
 import os
+from dotenv import load_dotenv
 
-openai.api_key = os.environ.get("OPENAI_API")
+load_dotenv("environ.env")
+
+openai.api_key = os.getenv("OPENAI_API")
 
 
 def tag_chat(chat: str):

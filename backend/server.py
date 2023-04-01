@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uuid
 import openai
 import os
+from dotenv import load_dotenv
 
 from request.LeaveChatRequest import LeaveChatRequest
 from request.CreateChatRequest import CreateChatRequest
@@ -20,7 +21,9 @@ from request.WriteMessageRequest import WriteMessageRequest
 from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
 from response.UserLoginResponse import UserLoginResponse
 
-openai.api_key = os.environ.get("OPENAI_API")
+load_dotenv("environ.env")
+
+openai.api_key = os.getenv("OPENAI_API")
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
 chats = {
