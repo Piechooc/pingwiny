@@ -39,7 +39,7 @@ async def user_login(nickname: str) -> UserLoginResponse:
 
 
 @app.put("/move/{moveRequest}")
-async def register_move(moveRequest: MoveRequest):
+async def move(moveRequest: MoveRequest):
     users[moveRequest.id]["x"] = moveRequest.x
     users[moveRequest.id]["y"] = moveRequest.y
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
