@@ -18,7 +18,7 @@ export const App = ({desks}:Props) =>
     <>
       {user===undefined ? <LoginPage  setUser={setUser}/> :           
         <div style={{display: 'flex', justifyContent: 'flex-end' }}>
-            <Map desks={desks}/>
+            <Map desks={desks} user={user}/>
         </div>}
     </>
   );
