@@ -13,6 +13,8 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from backend.request.MoveRequest import MoveRequest
+from backend.request.WriteMessageRequest import WriteMessageRequest
+from backend.response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
 from backend.response.UserLoginResponse import UserLoginResponse
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
@@ -60,6 +62,57 @@ async def move(moveRequest: MoveRequest):
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
+def get_map_state(user_id):
+    MAX_LENGTH_IN_CLOUD = 20
+    LAST_ITEM = -1
+
+    users_response = []
+    for user_id, user_dict in users.items():
+        user = User(
+            id=user_id,
+            x=user_dict["x"],
+            y=user_dict["y"],
+            status=user_dict["status"],
+            nickname=user_dict["nickname"]
+        )
+        users_response.append(user)
+
+    chat_clouds = []
+    for chat_id, chat_dict in chats.items():
+        can_access = True
+        if chat_dict["is_private"] and user_id not in chat_dict["user_ids"].values():
+            can_access = False
+
+        if can_access:
+            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD]
+        else:
+            text_in_cloud = "..."
+
+        users_in_chat = []
+        for user_id, is_active in chat_dict["users_ids"].items():
+            user_in_chat = UserInChat(
+                id=user_id,
+                isActive=is_active,
+            )
+            users_in_chat.append(user_in_chat)
+
+        chat_cloud = ChatCloud(
+            chat_id=chat_id,
+            users_in_chat=users_in_chat,
+            can_access=can_access,
+            text_in_cloud=text_in_cloud,
+        )
+        chat_clouds.append(chat_cloud)
+
+    return MapStateResponse(
+        chat_clouds=chat_clouds,
+        users=users,
+    )
+
+
+def update_status(user_id, status):
+    users[user_id]["status"] = status
+
 @app.get("/getchat")
 async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse:
     chat = chats[get_chat_request.chat_id]
@@ -89,9 +142,11 @@ async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatRespo
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-def write_msg(user_id, chat_id, msg):
-    chat = chats[chat_id]
-    chat["messages"].append({"user-id": user_id, "message": msg})
+@app.put("/writemessage/{writeMessageRequest}")
+async def write_msg(writeMessageRequest: WriteMessageRequest):
+    chat = chats[writeMessageRequest.chat_id]
+    chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 # def merge_messages(chat_id: str):
 #     chat = ""
