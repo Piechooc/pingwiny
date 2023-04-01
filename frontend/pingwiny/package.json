@@ -15,6 +15,7 @@
     "pixi.js": "^7.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-pixi": "^0.9.19",
     "react-redux": "^8.0.5",
     "react-scripts": "5.0.1",
     "redux": "^4.2.1",
