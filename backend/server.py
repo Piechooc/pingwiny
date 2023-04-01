@@ -11,6 +11,7 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from backend.request.MoveRequest import MoveRequest
+from backend.request.WriteMessageRequest import WriteMessageRequest
 from backend.response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
 from backend.response.UserLoginResponse import UserLoginResponse
 
@@ -137,9 +138,11 @@ async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatRespo
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-def write_msg(user_id, chat_id, msg):
-    chat = chats[chat_id]
-    chat["messages"].append({"user-id": user_id, "message": msg})
+@app.put("/writemessage/{writeMessageRequest}")
+async def write_msg(writeMessageRequest: WriteMessageRequest):
+    chat = chats[writeMessageRequest.chat_id]
+    chat["messages"].append({"user-id": writeMessageRequest.user_id, "message": writeMessageRequest.message})
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
 def leave_chat(user_id, chat_id):
