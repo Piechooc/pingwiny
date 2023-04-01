@@ -15,14 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: list directories
-        run: ls -lah
-
-      - name: change directory
-        run: cd frontend/pingwiny
-
-      - name: npm install
-        run: npm install
-
-      - name: npm run
-        run: npm run
+      - name: npm install, run
+        run: |
+          cd frontend/pingwiny
+          npm install
+          npm run
