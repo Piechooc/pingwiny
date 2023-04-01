@@ -48,6 +48,23 @@ def register_move(user_id, x, y):
 
 def get_map_state(user_id):
     # TODO get list of all users and list of all current chats as per whiteboard
+    # for chat_id, chat_dict in chats.items():
+    #     print(key)
+    #     print(value)
+    chmurki = {
+        [
+            {
+                "chat_id": 1,
+                "user_ids": [1, 2, 3],
+                "can_access": False,
+                "tekst_do_chmurki": "tekst"
+            }
+        ]
+    }
+    map_state = {
+        "users": users,
+        "chats": {},
+    }
     pass
 
 
@@ -72,8 +89,18 @@ def create_chat(user_id1, user_id2, is_private):
 
 def write_msg(user_id, chat_id):
     # TODO write message to chat is user is part of it
+    try:
+        user_ids = chats[chat_id]["user_ids"]
+
+    except:
+        print("error")
+        return "ERROR"
     pass
 
+
+if __name__ == '__main__':
+    x = 3
+    print(write_msg(3, 5))
 
 def leave_chat(user_id, chat_id):
     # TODO remove user from chat, if he is the last one, then archivize conversation and remove it from current chats
@@ -125,5 +152,5 @@ def leave_chat(user_id: int, chat_id: str):
     return leave_chat(user_id, chat_id)
 
 
-if __name__ == "__main__":
-    app.run()
+# if __name__ == "__main__":
+#     app.run()
