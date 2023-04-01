@@ -34,12 +34,11 @@ chats = {
 }
 
 
-
 app = FastAPI()
 
 
-@app.post("/userlogin/{nickname}", response_class=HTMLResponse)
-async def user_login(nickname: str):
+@app.post("/userlogin/{nickname}")
+async def user_login(nickname: str) -> UserLoginResponse:
     new_id = uuid.uuid4()
     users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
