@@ -34,13 +34,15 @@ jobs:
         run: npm run build
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./build/* -r
+        run: |
+          zip release.zip ./build/* -r
+          ls -lah
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: 'penguins-agh'
-          path: release.zip
+          path: './frontend/pingwiny/release.zip'
   deploy:
     runs-on: ubuntu-latest
     
