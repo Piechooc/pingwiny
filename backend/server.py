@@ -1,23 +1,13 @@
-from flask import Flask
 from fastapi import FastAPI
 import uuid
 
 from backend.response.UserLoginResponse import UserLoginResponse
 
-app = Flask(__name__, template_folder="../frontend/")
-
-
-users = {
-    "user_id1_mock": {
-        "nickname": "mock",
-        "x": 0,
-        "y": 0,
-        "status": "available"
-        },
-}
+users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
 chats = {
     "chat_id1_mock": {
-        "users_ids": [],
+        "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
+        "active_users_count": 2,
         "messages": [
             {
                 "user-id": 1,
@@ -59,33 +49,39 @@ def update_status(user_id, status):
 
 
 def get_chat(user_id, chat_id):
-    # TODO return chat contents if user can access it
-    pass
+    chat = chats[chat_id]
+    if not (chat["is_private"] and user_id not in chat["users_ids"].keys()):
+        return chat
 
 
 def join_chat(user_id, chat_id):
-    # TODO add user to chat if its not private
-    pass
+    chat = chats[chat_id]
+    if not chat["is_private"]:
+        chat["users_ids"][user_id] = True
+        chat["active_users_count"] += 1
 
 
 def create_chat(user_id1, user_id2, is_private):
-    # TODO create chat is user2 is not on not disturb or already busy
-    pass
+    if users[user_id2]["status"] != "not disturb":
+        new_chat_id = uuid.uuid4()
+        chats[new_chat_id] = {"users_ids": {user_id1: True, user_id2: True}, "active_users_count": 2, "messages": [], "is_private": is_private}
+        return new_chat_id
+    # TODO if not then return error or smth idk
 
 
-def write_msg(user_id, chat_id):
-    # TODO write message to chat is user is part of it
-    pass
+def write_msg(user_id, chat_id, msg):
+    chat = chats[chat_id]
+    chat["messages"].append({"user-id": user_id, "message": msg})
 
 
 def leave_chat(user_id, chat_id):
-    # TODO remove user from chat, if he is the last one, then archivize conversation and remove it from current chats
-    pass
+    chat = chats[chat_id]
+    chat["users_ids"][user_id] = False
+    chat["active_users_count"] -= 1
 
-
-@app.route('/login', methods=['POST'])
-def login(login: str):
-    return add_user(login)
+    if chat["active_users_count"] == 0:
+        # delete chat and archive conversation and remove it from current chats
+        pass
 
 
 @app.route('/move', methods=['PUT'])
@@ -119,8 +115,8 @@ def create_chat(user_id1: int, user_id2: int, is_private: bool):
 
 
 @app.route('/write_msg', methods=['PUT'])
-def write_msg(user_id: int, chat_id: str):
-    return write_msg(user_id, chat_id)
+def write_msg(user_id: int, chat_id: int, msg: str):
+    return write_msg(user_id, chat_id, msg)
 
 
 @app.route('/leave_chat', methods=['PUT'])
