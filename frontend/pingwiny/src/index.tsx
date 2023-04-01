@@ -9,20 +9,14 @@ import { createStore } from 'redux';
 const initialState = {
   desks: [
     { x: 100, y: 100, taken: false },
-    { x: 100, y: 200, taken: false },
+    { x: 100, y: 300, taken: false },
+    { x: 100, y: 500, taken: false },
+    { x: 400, y: 100, taken: false },
+    { x: 400, y: 300, taken: false },
     // Add more desks here
   ],
 };
-let desks = [
-  { x: 100, y: 100, taken: false },
-  { x: 100, y: 300, taken: false },
-  { x: 100, y: 500, taken: false },
-  { x: 400, y: 100, taken: false },
-  { x: 400, y: 300, taken: false },
-  { x: 400, y: 500, taken: false },
 
-  // Add more desks here
-]
 const reducer = (state = initialState, action: { type: any; }) => {
   switch (action.type) {
     // Add any state update logic here
@@ -39,9 +33,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-      {/* <Provider store={store}> */}
-        <App desks={desks}/>
-      {/* </Provider> */}
+      <Provider store={store}>
+        <App/>
+      </Provider>
   </React.StrictMode>
 );
 
