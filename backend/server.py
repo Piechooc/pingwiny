@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import uuid
 
+from backend.response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
 from backend.response.UserLoginResponse import UserLoginResponse
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
@@ -40,14 +41,23 @@ def register_move(user_id, x, y):
 
 
 def get_map_state(user_id):
-    # TODO get list of all users and list of all current chats as per whiteboard
     MAX_LENGTH_IN_CLOUD = 20
     LAST_ITEM = -1
+
+    users_response = []
+    for user_id, user_dict in users.items():
+        user = User()
+        user.id = user_id
+        user.x = user_dict["x"]
+        user.y = user_dict["y"]
+        user.status = user_dict["status"]
+        user.nickname = user_dict["nickname"]
+        users_response.append(user)
 
     chat_clouds = []
     for chat_id, chat_dict in chats.items():
         can_access = True
-        if chat_dict["is_private"] and user_id not in chat_dict["user_ids"]:
+        if chat_dict["is_private"] and user_id not in chat_dict["user_ids"].values():
             can_access = False
 
         if can_access:
@@ -55,29 +65,24 @@ def get_map_state(user_id):
         else:
             text_in_cloud = "..."
 
-        chat_clouds.append(
-            {
-                "chat_id": chat_id,
-                "user_ids": chat_dict["users_ids"],
-                "can_access": can_access,
-                "text_in_cloud": text_in_cloud
-            }
-        )
+        users_in_chat = []
+        for user_id, is_active in chat_dict["users_ids"].items():
+            user_in_chat = UserInChat()
+            user_in_chat.id = user_id
+            user_in_chat.isActive = is_active
+            users_in_chat.append(user_in_chat)
 
-    chmurki = [
-        {
-            "chat_id": 1,
-            "user_ids": [1, 2, 3],
-            "can_access": False,
-            "tekst_do_chmurki": "tekst"
-        },
-    ]
+        chat_cloud = ChatCloud()
+        chat_cloud.chat_id = chat_id
+        chat_cloud.users_in_chat = users_in_chat
+        chat_cloud.can_access = can_access
+        chat_cloud.text_in_cloud = text_in_cloud
+        chat_clouds.append(chat_cloud)
 
-    map_state = {
-        "users": users,
-        "chats": {},
-    }
-    pass
+    map_state_response = MapStateResponse()
+    map_state_response.chat_clouds = chat_clouds
+    map_state_response.users = users
+    return map_state_response
 
 
 def update_status(user_id, status):
