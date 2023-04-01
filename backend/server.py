@@ -4,7 +4,7 @@ import uuid
 from backend.request.CreateChatRequest import CreateChatRequest
 from backend.request.GetChatRequest import GetChatRequest
 from backend.request.JoinChatRequest import JoinChatRequest
-from backend.request.LeaveRequest import LeaveRequest
+from backend.request.LeaveChatRequest import LeaveRequest
 from backend.request.UpdateStatusRequest import UpdateStatusRequest
 from backend.response.CreateChatResponse import CreateChatResponse
 from backend.response.GetChatResponse import GetChatResponse
@@ -155,7 +155,7 @@ async def write_msg(writeMessageRequest: WriteMessageRequest):
 
 
 @app.put("/leave_chat")
-def leave_chat(leave_request: LeaveRequest) -> LeaveChatResponse:
+def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
     chat["users_ids"][user_id] = False
