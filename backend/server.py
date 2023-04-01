@@ -109,6 +109,7 @@ def leave_chat(leave_request: LeaveRequest) -> LeaveChatResponse:
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
         archive[chat_id] = chat
+
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
