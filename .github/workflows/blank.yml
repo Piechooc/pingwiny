@@ -28,7 +28,10 @@ jobs:
           cache-dependency-path: './frontend/pingwiny/package-lock.json'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          pwd
+          ls -lah
+          npm install
 
       - name: Build
         run: npm run build
