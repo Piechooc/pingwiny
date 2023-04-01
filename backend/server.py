@@ -2,12 +2,31 @@ from fastapi import FastAPI
 import uuid
 
 from backend.response.UserLoginResponse import UserLoginResponse
+from backend.response.LeaveChatResponse import LeaveChatResponse
 
 users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
 chats = {
     "chat_id1_mock": {
         "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
         "active_users_count": 2,
+        "messages": [
+            {
+                "user-id": 1,
+                "message": "hello",
+            },
+            {
+                "user-id": 2,
+                "message": "hi",
+            }
+
+        ],
+        "is_private": False
+    },
+}
+
+archive = {
+    "chat_id1_mock": {
+        "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
         "messages": [
             {
                 "user-id": 1,
@@ -73,16 +92,18 @@ def write_msg(user_id, chat_id, msg):
     chat = chats[chat_id]
     chat["messages"].append({"user-id": user_id, "message": msg})
 
-
-def leave_chat(user_id, chat_id):
+@app.put("/leave_chat")
+def leave_chat(user_id, chat_id) -> LeaveChatResponse:
     chat = chats[chat_id]
     chat["users_ids"][user_id] = False
     chat["active_users_count"] -= 1
 
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
-        pass
-
+        archive[chat_id] = chat
+        chats.pop(chat_id)
+        return LeaveChatResponse(active=False)
+    return LeaveChatResponse(active=True)
 
 @app.route('/move', methods=['PUT'])
 def move(user_id: int, x: str, y: str):
