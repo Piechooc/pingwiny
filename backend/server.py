@@ -1,4 +1,8 @@
 from flask import Flask
+from fastapi import FastAPI
+import uuid
+
+from backend.response.UserLoginResponse import UserLoginResponse
 
 app = Flask(__name__, template_folder="../frontend/")
 
@@ -7,14 +11,14 @@ users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "availa
 chats = {"chat_id1_mock": {"users_ids": [], "messages": [], "is_private": False}}
 
 
-def get_id():
-    # TODO return id, generate it somehow
-    pass
+app = FastAPI()
 
 
-def add_user(nickname):
-    new_id = get_id()
+@app.post("/userlogin/{nickname}", response_class=HTMLResponse)
+async def user_login(nickname: str):
+    new_id = uuid.uuid4()
     users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
+    return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
 
 def register_move(user_id, x, y):
