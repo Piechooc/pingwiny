@@ -1,65 +1,104 @@
-from flask import Flask, request, render_template
-from flask.ext.sqlalchemy import SQLAlchemy as sa
-from sqlalchemy.ext.mutable import MutableList
+from flask import Flask
 
 app = Flask(__name__, template_folder="../frontend/")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://username:password@localhost:port/DBNAME"
 
-db = sa(app)
-
-max_string_length = 10000
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    x_position = db.Column(db.Integer)
-    y_position = db.Column(db.Integer)
-
-    def __init__(self, username, x_position, y_position):
-        self.username = username
-        self.x_position = x_position
-        self.y_position = y_position
-
-    def __repr__(self):
-        return f'<User {self.username}>'
+users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
+chats = {"chat_id1_mock": {"users_ids": [], "messages": [], "is_private": False}}
 
 
-class Chat(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    users = db.Column(db.List(80), unique=True)
-    chat_list = db.Column(MutableList.as_mutable(sa.PickleType),
-                                    default=[])
-
-    def __init__(self, username, x_position, y_position):
-        self.username = username
-        self.x_position = x_position
-        self.y_position = y_position
-
-    def __repr__(self):
-        return f'<User {self.username}>'
+def get_id():
+    # TODO return id, generate it somehow
+    pass
 
 
-user_book_m2m = db.Table(
-    "user_book",
-    sa.Column("user_id", sa.ForeignKey(User.id), primary_key=True),
-    sa.Column("book_id", sa.ForeignKey(Book.id), primary_key=True),
-)
-
-with app.app_context():
-    db.create_all()
-
-app.debug = True
+def add_user(nickname):
+    new_id = get_id()
+    users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+def register_move(user_id, x, y):
+    users[user_id]["x"] = x
+    users[user_id]["y"] = y
 
 
-@app.route("/login")
-def index(login: str):
-    return render_template("index.html")
+def get_map_state(user_id):
+    # TODO get list of all users and list of all current chats as per whiteboard
+    pass
+
+
+def update_status(user_id, status):
+    users[user_id]["status"] = status
+
+
+def get_chat(user_id, chat_id):
+    # TODO return chat contents if user can access it
+    pass
+
+
+def join_chat(user_id, chat_id):
+    # TODO add user to chat if its not private
+    pass
+
+
+def create_chat(user_id1, user_id2, is_private):
+    # TODO create chat is user2 is not on not disturb or already busy
+    pass
+
+
+def write_msg(user_id, chat_id):
+    # TODO write message to chat is user is part of it
+    pass
+
+
+def leave_chat(user_id, chat_id):
+    # TODO remove user from chat, if he is the last one, then archivize conversation and remove it from current chats
+    pass
+
+
+@app.route('/login', methods=['POST'])
+def login(login: str):
+    return add_user(login)
+
+
+@app.route('/move', methods=['PUT'])
+def move(user_id: int, x: str, y: str):
+    return register_move(user_id, x, y)
+
+
+@app.route('/get_map_state', methods=['GET'])
+def get_map_state(user_id: int):
+    return get_map_state(user_id)
+
+
+@app.route('/update_status', methods=['PUT'])
+def move(user_id: int, status: str):
+    return update_status(user_id, status)
+
+
+@app.route('/get_chat', methods=['GET'])
+def get_chat(user_id: int, chat_id: int):
+    return get_chat(user_id, chat_id)
+
+
+@app.route('/join_chat', methods=['PUT'])
+def join_chat(user_id: int, chat_id: int):
+    return join_chat(user_id, chat_id)
+
+
+@app.route('/create_chat', methods=['POST'])
+def create_chat(user_id1: int, user_id2: int, is_private: bool):
+    return create_chat(user_id1, user_id2, is_private)
+
+
+@app.route('/write_msg', methods=['PUT'])
+def write_msg(user_id: int, chat_id: str):
+    return write_msg(user_id, chat_id)
+
+
+@app.route('/leave_chat', methods=['PUT'])
+def leave_chat(user_id: int, chat_id: str):
+    return leave_chat(user_id, chat_id)
 
 
 if __name__ == "__main__":
