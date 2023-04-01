@@ -36,7 +36,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: 'penguins-agh'
+          name: 'react-app'
           path: './frontend/pingwiny/build'
 
   build_python:
@@ -94,7 +94,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: 'penguins-agh'
+          name: 'react-agh'
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -120,6 +120,9 @@ jobs:
         with:
           name: 'python-app'
           path: .
+
+      - name: Listing directories
+        run: ls -lah
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
