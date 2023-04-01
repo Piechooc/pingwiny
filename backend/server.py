@@ -51,19 +51,38 @@ def register_move(user_id, x, y):
 
 def get_map_state(user_id):
     # TODO get list of all users and list of all current chats as per whiteboard
-    # for chat_id, chat_dict in chats.items():
-    #     print(key)
-    #     print(value)
-    chmurki = {
-        [
+    MAX_LENGTH_IN_CLOUD = 20
+    LAST_ITEM = -1
+
+    chat_clouds = []
+    for chat_id, chat_dict in chats.items():
+        can_access = True
+        if chat_dict["is_private"] and user_id not in chat_dict["user_ids"]:
+            can_access = False
+
+        if can_access:
+            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD]
+        else:
+            text_in_cloud = "..."
+
+        chat_clouds.append(
             {
-                "chat_id": 1,
-                "user_ids": [1, 2, 3],
-                "can_access": False,
-                "tekst_do_chmurki": "tekst"
+                "chat_id": chat_id,
+                "user_ids": chat_dict["users_ids"],
+                "can_access": can_access,
+                "text_in_cloud": text_in_cloud
             }
-        ]
-    }
+        )
+
+    chmurki = [
+        {
+            "chat_id": 1,
+            "user_ids": [1, 2, 3],
+            "can_access": False,
+            "tekst_do_chmurki": "tekst"
+        },
+    ]
+
     map_state = {
         "users": users,
         "chats": {},
