@@ -35,7 +35,6 @@ export default function ChatArchive({user, chatArchiveList, setChat, setShowArch
             })
             .catch(error => {
                 console.error(error);
-                alert('Error: ' + error)
             });
     };
 

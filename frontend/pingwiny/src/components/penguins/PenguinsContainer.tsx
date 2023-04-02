@@ -34,7 +34,6 @@ const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
     .then(response => response.json())
     .catch(error => {
         console.error(error);
-        alert('Error: ' + error)
     });
 
     // find the distance between myPenguin and other penguins
@@ -83,7 +82,6 @@ const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
           }
         } catch (error) {
           console.error(error);
-          alert('Error: ' + error)
         }
       } else {
         try {
@@ -108,7 +106,6 @@ const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
       }
     } catch (error) {
       console.error(error);
-      alert('Error: ' + error)
     }
   };
 
@@ -135,7 +132,6 @@ const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
           }
         } catch (error) {
           console.error(error);
-          alert('Error: ' + error)
         }
       } else {
         try {
@@ -154,12 +150,10 @@ const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
           }
         } catch (error) {
           console.error(error);
-          alert('Error: ' + error)
         }
       }
     } catch (error) {
       console.error(error);
-      alert('Error: ' + error)
     }
   };
 

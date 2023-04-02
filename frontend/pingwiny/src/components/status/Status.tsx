@@ -31,7 +31,6 @@ const StatusButton = ({status, user}: Props) => {
         })
         .catch(error => {
             console.error(error);
-            alert('Error: ' + error)
         });
   }
 

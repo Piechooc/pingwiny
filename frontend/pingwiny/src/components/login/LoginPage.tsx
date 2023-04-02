@@ -24,7 +24,6 @@ const LoginPage = ({setUser}:Props) => {
         })
         .catch(error => {
             console.error(error);
-            alert('Error: ' + error)
         });
     };
 

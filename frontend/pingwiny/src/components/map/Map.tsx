@@ -41,7 +41,6 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
       })
       .catch(error => {
           console.error(error);
-          alert('Error: ' + error)
       });
     };
 
@@ -59,7 +58,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
             })
             .catch(error => {
                 console.error(error);
-                alert('Error: ' + error)
+                ('Error: ' + error)
             });
         }, 200);
         return () => {
