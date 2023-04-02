@@ -109,9 +109,9 @@ async def get_map_state(user_id: str) -> MapStateResponse:
     LAST_ITEM = -1
 
     users_response = []
-    for user_id, user_dict in users.items():
+    for user_identifier, user_dict in users.items():
         user = User(
-            id=user_id,
+            id=user_identifier,
             x=user_dict["x"],
             y=user_dict["y"],
             status=user_dict["status"],
@@ -135,14 +135,14 @@ async def get_map_state(user_id: str) -> MapStateResponse:
         users_in_chat = []
         cloud_x = 0
         cloud_y = 0
-        for user_id, is_active in chat_dict["users_ids"].items():
+        for user_identifier, is_active in chat_dict["users_ids"].items():
             user_in_chat = UserInChat(
-                id=user_id,
+                id=user_identifier,
                 isActive=is_active,
             )
             users_in_chat.append(user_in_chat)
-            cloud_x = users[user_id]["x"]
-            cloud_y = users[user_id]["y"]
+            cloud_x = users[user_identifier]["x"]
+            cloud_y = users[user_identifier]["y"]
 
         chat_cloud = ChatCloud(
             chat_id=chat_id,
