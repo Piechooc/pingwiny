@@ -63,10 +63,16 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       })
 
       if (response.ok) {
-        let chat_id = await response.json().then(data=> data["chat_id"]);
+        let chatId = await response.json().then(data=> data["chat_id"]);
+        console.log(chatId)
         try {
-          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/' + chat_id, {
-            method: 'PUT'
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              user_id: user.id,
+              chat_id: chatId
+            })
           })
 
           if (response.ok) {
@@ -80,6 +86,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         try {
           const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
             method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
               user_id1: selectedPenguin?.id,
               user_id2: user.id,
