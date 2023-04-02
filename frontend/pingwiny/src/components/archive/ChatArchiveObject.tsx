@@ -30,8 +30,6 @@ const ChatArchiveObject = ({showButton, handleButtonClick}: Props) => {
             /> : null}
         </>
     );
-
-
 };
 
 export default ChatArchiveObject;

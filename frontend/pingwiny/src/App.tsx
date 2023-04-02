@@ -53,10 +53,7 @@ export const App = ({desks, clouds}:Props) =>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
           <div style={{display: 'flex', }}>
             <div style={{justifyContent: 'flex-start'}}>
-              {chat && user ? (!showArchiveList ?
-              <Chat user={user} chatId={chat.id} nickname={user.nickname}/> :
-              <ArchiveObject chatList={chatArchiveList}/>
-            )  : null }
+              {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject chatList={chatArchiveList}/>) : null}
             </div>
             <div style={{justifyContent: 'flex-end' }}>
               <Map desks={desks} user={user} clouds={clouds} setUser={setUser} setShowArchiveList={setShowArchiveList} showArchiveList={showArchiveList} />
