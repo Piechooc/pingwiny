@@ -19,7 +19,7 @@ const Chat = ({userId, chatId}:Props) => {
     const fetchMessages = async () => {
         try {
             const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
-                method: 'GET',
+                method: 'POST',
                 body: JSON.stringify({
                     user_id: userId,
                     chat_id: chatId,
@@ -76,7 +76,7 @@ const Chat = ({userId, chatId}:Props) => {
     return (
         <Stage width={window.innerWidth*0.3} height={window.innerHeight*0.9}>
             <Container>
-                {messages.map((message, index) => (
+                {messages?.map((message, index) => (
                     <Text key={index} text={`${message.user}: ${message.text}`} y={index * 30} />
                 ))}
                 <Graphics
