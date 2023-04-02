@@ -74,8 +74,10 @@ app.add_middleware(
 
 @app.get("/cleanup")
 async def cleanup():
+    global users, chats
     users = {}
     chats = {}
+    
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
