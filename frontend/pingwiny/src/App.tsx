@@ -16,14 +16,14 @@ interface Props{
 export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
-const [chat, setChat] = useState<ChatType>();
+  const [chat, setChat] = useState<ChatType>({id: "1", messages: []});
 
   return (
     <>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
           <div style={{display: 'flex', }}>
             <div style={{justifyContent: 'flex-start'}}>
-              {chat ? <Chat userId={user.id} chatId={chat.id} nickname={user.nickname}/> : null}
+              {chat && user ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null}
             </div>
             <div style={{justifyContent: 'flex-end' }}>
               <Map desks={desks} user={user} clouds={clouds} setUser={setUser}/>

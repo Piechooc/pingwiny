@@ -16,7 +16,7 @@ interface Props{
     clouds: Cloud[]
   }
 
-const Map = ({desks, user, setUser, clouds}:Props) => {
+const Map = ({desks, user, setUser, clouds}: Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
 
     useEffect(() => {
