@@ -29,9 +29,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       })
     })
     .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
     .catch(error => {
         console.error(error);
         alert('Error: ' + error)
@@ -44,8 +41,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       return Math.sqrt(dx * dx + dy * dy);
     });
 
-    // find the closest penguin
-    console.log(distances)
     const minDistance = Math.min(...distances);
     const closestPenguin = penguins[distances.indexOf(minDistance)];
 
@@ -60,8 +55,56 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     handleMyPenguinMove(user.x, user.y);
   }, [user]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     console.log("Start talking")
+    try {
+      const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
+        method: 'GET',
+        headers: {'Access-Control-Allow-Origin':'*'}
+      })
+
+      if (response.ok) {
+        let chatId = await response.json().then(data=> data["chat_id"]);
+        console.log(chatId)
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
+            method: 'PUT',
+            body: JSON.stringify({
+              user_id: user.id,
+              chat_id: chatId
+            })
+          })
+
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      } else {
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
+            method: 'POST',
+            body: JSON.stringify({
+              user_id1: selectedPenguin?.id,
+              user_id2: user.id,
+              is_private: false
+            })
+          })
+
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error: ' + error)
+    }
   };
 
   return (

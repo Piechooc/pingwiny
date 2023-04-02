@@ -4,14 +4,15 @@ import uuid
 import openai
 import os
 
-from backend.response.ChatUsersResponse import ChatUsersResponse
+
+from response.ChatUsersResponse import ChatUsersResponse
 from request.LeaveChatRequest import LeaveChatRequest
 from request.CreateChatRequest import CreateChatRequest
 from request.GetChatRequest import GetChatRequest
 from request.JoinChatRequest import JoinChatRequest
 from request.UpdateStatusRequest import UpdateStatusRequest
 from response.CreateChatResponse import CreateChatResponse
-from response.GetChatResponse import GetChatResponse
+from response.GetChatResponse import GetChatResponse, Message
 from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
@@ -72,6 +73,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/cleanup")
+async def cleanup():
+    global users, chats
+    users = {}
+    chats = {}
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
 @app.post("/userlogin/{nickname}")
@@ -228,6 +237,6 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 @app.get("/chatusers/{user_id}")
 async def user_login(user_id: str):
     for chat_id in chats.keys():
-        if chats[chat_id]["users_ids"][user_id]:
+        if user_id in chats[chat_id]["users_ids"] and chats[chat_id]["users_ids"][user_id]:
             return ChatUsersResponse(chat_id=chat_id)
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
