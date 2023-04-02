@@ -21,9 +21,10 @@ interface Props{
 
 const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
+    const [new_clouds, setClouds] = useState<Cloud[]>([]);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
     const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
-    
+
     const handleArchiveButtonClick = () => {
       fetch('http://penguins-agh-rest.azurewebsites.net/archive/' + user["id"], {
         method: 'GET',
@@ -52,7 +53,9 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
             .then(response => response.json())
             .then(data => {
                 const otherPenguings = data["users"].filter((onePenguin: User) => onePenguin.id != user.id);
-        
+                const cloudsResponse = data["chat_clouds"]
+
+                setClouds(cloudsResponse)
                 setPenguinUsers(otherPenguings);
             })
             .catch(error => {
@@ -64,8 +67,8 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
             clearInterval(penguinsUpdateInterval);
         };
     }, []);
-    
-    
+
+
     useEffect(() => {
         const archiveProximityCheck = setInterval(() => {
             const dx = user.x - archiveCoords.x;
@@ -94,7 +97,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
         />
         )}
         <PenguinsContainer user={user} penguins={penguinUsers} setUser={setUser}/>
-        {clouds.map((cloud, index) =>
+        {new_clouds.map((cloud, index) =>
                 <Graphics
                     key={index}
                     draw={g => {
@@ -108,7 +111,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
                     }}
                 />
             )}
-            {clouds.map((cloud, index) =>
+            {new_clouds.map((cloud, index) =>
                 <Text
                   text={cloud.text}
                   x={cloud.x + 60}

@@ -83,6 +83,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         }
       } else {
         try {
+          console.log(selectedPenguin?.id)
           const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
             method: 'POST',
             headers: {
@@ -110,6 +111,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
 
   const handlePrivateButtonClick = async () => {
     console.log("Start private talking")
+    console.log(selectedPenguin?.id)
+    console.log(user.id)
     try {
       const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
         method: 'GET'
@@ -135,6 +138,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         }
       } else {
         try {
+          console.log(selectedPenguin?.id)
+          console.log(user.id)
           const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},

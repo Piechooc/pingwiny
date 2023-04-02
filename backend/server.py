@@ -29,15 +29,15 @@ users = {
     "user_id1":
         {
             "nickname": "pingwin1",
-            "x": 0,
-            "y": 0,
+            "x": 300,
+            "y": 350,
             "status": "available"
         },
     "user_id2":
         {
             "nickname": "pingwin2",
-            "x": 0,
-            "y": 0,
+            "x": 200,
+            "y": 250,
             "status": "available"
         },
 }
