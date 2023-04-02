@@ -17,7 +17,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
 
   const handleMyPenguinMove = (x: number, y: number) => {
     // update position of my penguin on the server
-    fetch('http://127.0.0.1:5050/move', {
+    fetch('http://penguins-agh-rest.azurewebsites.net/move', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

@@ -15,7 +15,7 @@ const LoginPage = ({setUser}:Props) => {
         
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        fetch('http://127.0.0.1:5050/userlogin/' + nickname, {
+        fetch('http://penguins-agh-rest.azurewebsites.net/userlogin/' + nickname, {
             method: 'POST'
         })
         .then(response => response.json())
