@@ -188,7 +188,7 @@ async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
 
 @app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest):
-    if users[create_chat_request.user_id2]["status"] != "Don't disturb":
+    if create_chat_request.user_id2 in users.keys() and users[create_chat_request.user_id2]["status"] != "Don't disturb":
         new_chat_id = uuid.uuid4()
         chats[new_chat_id] = {"users_ids": {create_chat_request.user_id1: True, create_chat_request.user_id2: True},
                               "active_users_count": 2, "messages": [],
