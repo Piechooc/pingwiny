@@ -1,6 +1,7 @@
 import './App.css';
 import { Stage, Container, Sprite, Text } from '@pixi/react';
 import {Dispatch, useMemo} from 'react';
+
 import Desk from './types/Desk';
 import Map from  './components/map/Map';
 import LoginPage from './components/login/LoginPage';
@@ -8,6 +9,7 @@ import { useState } from 'react';
 import User from './types/User';
 import StatusButton from "./components/status/Status"
 import Cloud from './types/Cloud';
+
 import Chat from "./components/chat/Chat";
 import ChatType from './types/ChatType';
 interface Props{

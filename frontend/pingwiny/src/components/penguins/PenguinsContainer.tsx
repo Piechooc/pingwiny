@@ -59,7 +59,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     console.log("Start talking")
     try {
       const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
-        method: 'GET'
+        method: 'GET',
+        headers: {'Access-Control-Allow-Origin':'*'}
       })
 
       if (response.ok) {
