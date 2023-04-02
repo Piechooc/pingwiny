@@ -23,8 +23,8 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {"user-id1": {"nickname": "mock", "x": 100, "y": 100, "status": "available"},
-        "user-id2": {"nickname": "mock", "x": 390, "y": 390, "status": "available"}
+users = {"user-id1": {"nickname": "mock", "x": 100, "y": 100, "status": "Available"},
+        "user-id2": {"nickname": "mock", "x": 390, "y": 390, "status": "Available"}
 }
 chats = {
     "chat_id1_mock": {
