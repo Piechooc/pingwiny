@@ -20,6 +20,9 @@ const StatusButton = ({status, user}: Props) => {
     user.status = status;
     fetch('http://penguins-agh-rest.azurewebsites.net/updatestatus/', {
             method: 'PUT',
+            headers: {
+                  'Content-Type': 'application/json'
+                },
             body: JSON.stringify( {
                 user_id: user.id,
                 status: status,

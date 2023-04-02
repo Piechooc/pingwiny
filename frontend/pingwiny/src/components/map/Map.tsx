@@ -26,8 +26,8 @@ const Map = ({desks, user, setUser, clouds}: Props) => {
             })
             .then(response => response.json())
             .then(data => {
-                const otherPenguings = data["users"].filter((onePenguing: User) => onePenguing.id != user.id);
-
+                const otherPenguings = data["users"].filter((onePenguin: User) => onePenguin.id != user.id);
+        
                 setPenguinUsers(otherPenguings);
             })
             .catch(error => {

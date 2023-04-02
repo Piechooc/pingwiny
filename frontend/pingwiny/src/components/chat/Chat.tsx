@@ -59,6 +59,7 @@ const Chat = ({user, chatId, nickname}: Props) => {
             message: inputValue
         }, ...messages]);
             // Send the message to the server
+
             // try {
             //     const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
             //         method: 'POST',
