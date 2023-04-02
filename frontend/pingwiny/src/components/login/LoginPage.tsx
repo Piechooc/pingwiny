@@ -11,14 +11,10 @@ const LoginPage = ({setUser}:Props) => {
     const [nickname, setNickname] = useState('');
     const handleNicknameChange = (event: any) => {
         setNickname(event.target.value);
-        console.log(nickname)
     };
         
     const handleSubmit = (event: any) => {
         event.preventDefault();
-
-         setUser({nickname, id: "1", x: 100, y: 100, status: "Available"});
-
         fetch('http://penguins-agh-rest.azurewebsites.net/userlogin/' + nickname, {
             method: 'POST'
         })

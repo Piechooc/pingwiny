@@ -23,18 +23,20 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
+users = {"user-id1": {"nickname": "mock", "x": 100, "y": 100, "status": "available"},
+        "user-id2": {"nickname": "mock", "x": 390, "y": 390, "status": "available"}
+}
 chats = {
     "chat_id1_mock": {
-        "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
+        "users_ids": {"user-id1": True, "user-id2": True},  # bool represents if user is currently in chat
         "active_users_count": 2,
         "messages": [
             {
-                "user-id": 1,
+                "user-id": "user-id1",
                 "message": "hello",
             },
             {
-                "user-id": 2,
+                "user-id": "user-id2",
                 "message": "hi",
             }
 
@@ -59,25 +61,25 @@ app.add_middleware(
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
     new_id = str(uuid.uuid4())
-    users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
+    users[new_id] = {"nickname": nickname, "x": 0, "y": 0, "status": "available"}
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
 
-@app.put("/updatestatus/{updateStatusRequest}")
+@app.put("/updatestatus")
 async def update_status(update_status_request: UpdateStatusRequest) -> JSONResponse:
     users[update_status_request.user_id]["status"] = update_status_request.status
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.put("/move/{moveRequest}")
+@app.put("/move")
 async def move(move_request: MoveRequest) -> JSONResponse:
     users[move_request.id]["x"] = move_request.x
     users[move_request.id]["y"] = move_request.y
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.get("/getmapstate/{userId}")
-async def get_map_state(user_id) -> MapStateResponse:
+@app.get("/getmapstate/{user_id}")
+async def get_map_state(user_id: str) -> MapStateResponse:
     MAX_LENGTH_IN_CLOUD = 10
     LAST_ITEM = -1
 
@@ -127,11 +129,11 @@ async def get_map_state(user_id) -> MapStateResponse:
 
     return MapStateResponse(
         chat_clouds=chat_clouds,
-        users=users,
+        users=users_response,
     )
 
 
-@app.get("/getchat/{getChatRequest}")
+@app.get("/getchat")
 async def get_chat(get_chat_request: GetChatRequest):
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
@@ -140,7 +142,7 @@ async def get_chat(get_chat_request: GetChatRequest):
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-@app.put("/joinchat/{joinChatRequest}")
+@app.put("/joinchat")
 async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
     chat = chats[join_chat_request.chat_id]
     if not chat["is_private"]:
@@ -149,7 +151,7 @@ async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.post("/createchat/{createChatRequest}")
+@app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest):
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
@@ -160,7 +162,7 @@ async def create_chat(create_chat_request: CreateChatRequest):
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-@app.put("/writemessage/{writeMessageRequest}")
+@app.put("/writemessage")
 async def write_msg(write_message_request: WriteMessageRequest) -> JSONResponse:
     chat = chats[write_message_request.chat_id]
     chat["messages"].append({"user-id": write_message_request.user_id, "message": write_message_request.message})
@@ -174,7 +176,7 @@ def merge_messages(chat_id: str):
     return chat
 
 
-@app.put("/leavechat/{leaveChatRequest}")
+@app.put("/leavechat")
 def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]

@@ -17,10 +17,28 @@ interface Props{
   }
 
 const Map = ({desks, user, setUser, clouds}:Props) => {
-    const penguinUsers: User[] = [
-        {x: 100, y: 100, nickname: "Pinguin1", id:"4", status: "Available"},
-        {x: 600, y: 400, nickname: "Pinguin2", id:"7", status: "Don't disturb"},
-    ]
+    const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        const penguinsUpdateInterval = setInterval(() => {
+            fetch('http://penguins-agh-rest.azurewebsites.net/getmapstate/' + user["id"], {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const otherPenguings = data["users"].filter((onePenguing: User) => onePenguing.id != user.id);
+        
+                setPenguinUsers(otherPenguings);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Error: ' + error)
+            });
+        }, 200);
+        return () => {
+            clearInterval(penguinsUpdateInterval);
+        };
+    }, []);
 
     return (
     <Stage width={window.innerWidth*0.7} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
