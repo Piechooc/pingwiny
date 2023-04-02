@@ -8,6 +8,8 @@ import User from "../../types/User";
 import {Button} from "@mui/material";
 
 
+
+
 interface Props{
     status: string,
     user: User
@@ -16,6 +18,17 @@ interface Props{
 const StatusButton = ({status, user}: Props) => {
   const onClick=() => {
     user.status = status;
+    fetch('http://penguins-agh-rest.azurewebsites.net/updatestatus/', {
+            method: 'POST',
+            body: JSON.stringify( {
+                user_id: user.id,
+                status: status,
+            })
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Error: ' + error)
+        });
   }
 
   return (
