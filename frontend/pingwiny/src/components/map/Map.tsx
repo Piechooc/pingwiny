@@ -8,6 +8,7 @@ import { Text } from '@pixi/react';
 import PenguinsContainer from '../penguins/PenguinsContainer';
 import ChatArchiveObject from "../archive/ChatArchiveObject";
 import ArchiveList from "../../types/ArchiveList";
+import ChatType from '../../types/ChatType';
 
 interface Props{
     desks: Desk[],
@@ -16,10 +17,11 @@ interface Props{
     setShowArchiveList: Dispatch<boolean>,
     showArchiveList: boolean,
     setChatArchiveList: Dispatch<ArchiveList[]>,
-    clouds: Cloud[]
+    clouds: Cloud[],
+    setChat: Dispatch<ChatType>
   }
 
-const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, clouds}:Props) => {
+const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, setChat, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
     const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
@@ -40,7 +42,6 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
       })
       .catch(error => {
           console.error(error);
-          alert('Error: ' + error)
       });
     };
 
@@ -60,7 +61,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
             })
             .catch(error => {
                 console.error(error);
-                alert('Error: ' + error)
+                ('Error: ' + error)
             });
         }, 200);
         return () => {
@@ -96,7 +97,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
         }}
         />
         )}
-        <PenguinsContainer user={user} penguins={penguinUsers} setUser={setUser}/>
+        <PenguinsContainer user={user} penguins={penguinUsers} setUser={setUser} setChat={setChat}/>
         {newClouds.map((cloud, index) =>
                 <Graphics
                     key={index}

@@ -21,6 +21,7 @@ const Chat = ({user, chatId, nickname}: Props) => {
         try {
             const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
                 method: 'POST',
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     user_id: user.id,
                     chat_id: chatId,
@@ -29,7 +30,7 @@ const Chat = ({user, chatId, nickname}: Props) => {
 
             if (response.ok) {
                 console.log(response);
-                return response.json();
+                return response.json().then((data) => data.messages);
             }
         } catch (error) {
             console.error(error);
@@ -61,7 +62,8 @@ const Chat = ({user, chatId, nickname}: Props) => {
 
             try {
                 const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
-                    method: 'POST',
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         user_id: user.id,
                         nickname: nickname,
@@ -69,32 +71,20 @@ const Chat = ({user, chatId, nickname}: Props) => {
                         message: inputValue
                     }),
                 });
-                if (response.ok) {
-                    // Add the message to the list of messages
-                    setMessages([{
-                        user_id: user.id,
-                        nickname: nickname,
-                        message: inputValue
-                    }, ...messages]);
 
-                    // Clear the input value
-                    setInputValue('');
-                } else {
-                    console.error(`Failed to send message: ${response.status} ${response.statusText}`);
-                }
             } catch (error) {
                 console.error(error);
             }
 
     };
-
+console.log("MESSAGES", messages)
     return (
         <div>
             
             <Paper style={{maxHeight:window.innerHeight*0.7, overflow: 'auto'}}>
             <List style={{width: window.innerWidth*0.3}}>
             {messages?.map((message, index) => (
-                <ListItem key={index}> {message.nickname}: {message.message}</ListItem>
+                <ListItem key={index}> {message.nickname}: {message.message} </ListItem>
             ))}
             </List>
             </Paper>
