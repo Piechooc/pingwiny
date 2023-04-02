@@ -13,12 +13,12 @@ interface Props{
 
 const Map = ({desks, user}:Props) => {
     const penguinUsers: User[] = [
-        {x: 100, y: 100, nickname: "Pinguin1", id:"4"},
-        {x: 600, y: 400, nickname: "Pinguin2", id:"7"},
+        {x: 100, y: 100, nickname: "Pinguin1", id:"4", status:"available"},
+        {x: 600, y: 400, nickname: "Pinguin2", id:"7", status:"available"},
     ]
 
     return (
-    <Stage width={window.innerWidth*0.8} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
+    <Stage width={window.innerWidth*0.7} height={window.innerHeight*0.9} options={{ backgroundColor: "e0ebeb", antialias: true }}>
         {desks.map((desk, index)=>
         <Graphics
         key={index}

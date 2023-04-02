@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Stage, Container, Text, Graphics } from '@pixi/react';
-import { TextStyle, Rectangle } from 'pixi.js';
+import {Container, Graphics, Stage, Text} from '@pixi/react';
+import {Rectangle} from 'pixi.js';
 
 interface Message {
     user: string;
@@ -18,11 +18,20 @@ const Chat = ({userId, chatId}:Props) => {
 
     const fetchMessages = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/messages?user_id=${userId}&chat_id=${chatId}`);
-            return await response.json();
+            const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
+                method: 'GET',
+                body: JSON.stringify({
+                    user_id: userId,
+                    chat_id: chatId,
+                })
+            })
+
+            if (response.ok) {
+                return response.json();
+            }
         } catch (error) {
             console.error(error);
-            return [];
+            alert('Error: ' + error)
         }
     };
 
@@ -65,7 +74,7 @@ const Chat = ({userId, chatId}:Props) => {
     const hitArea = new Rectangle(0, 0, 500, 30);
 
     return (
-        <Stage width={600} height={750}>
+        <Stage width={window.innerWidth*0.3} height={window.innerHeight*0.9}>
             <Container>
                 {messages.map((message, index) => (
                     <Text key={index} text={`${message.user}: ${message.text}`} y={index * 30} />
