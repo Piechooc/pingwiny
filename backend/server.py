@@ -25,44 +25,35 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {
-    "user_id1":
-        {
-            "nickname": "pingwin1",
-            "x": 0,
-            "y": 0,
-            "status": "available"
-        },
-    "user_id2":
-        {
-            "nickname": "pingwin2",
-            "x": 0,
-            "y": 0,
-            "status": "available"
-        },
-}
-chats = {
-    "chat_id1_mock": {
-        "users_ids": {"user_id1": True, "user_id2": True},  # bool represents if user is currently in chat
-        "active_users_count": 2,
-        "messages": [
-            {
-                "user_id": "user_id1",
-                "nickname": "pingwin1",
-                "message": "hello",
-            },
-            {
-                "user_id": "user_id2",
-                "nickname": "pingwin2",
-                "message": "hi",
-            }
+users = {}
 
-        ],
-        "is_private": False
-    },
-}
+chats = {}
 
-archive = {}
+archive = {" mock tag": {"chat_id1_mock": {
+    "users_ids": {"user_id1": False, "user_id2": False},  # bool represents if user is currently in chat
+    "active_users_count": 0,
+    "messages": [
+        {
+            "user_id": "user_id1",
+            "nickname": "Jakub",
+            "message": "hello",
+        },
+        {
+            "user_id": "user_id2",
+            "nickname": "Dawid",
+            "message": "hi",
+        },
+        {
+            "user_id": "user_id2",
+            "nickname": "Jakub",
+            "message": "this is an example of an archive",
+        }
+
+    ],
+    "is_private": False
+}
+}
+}
 
 app = FastAPI()
 
