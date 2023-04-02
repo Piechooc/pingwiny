@@ -21,7 +21,7 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
 
     useEffect(() => {
         const penguinsUpdateInterval = setInterval(() => {
-            fetch('http://127.0.0.1:5050/getmapstate/' + user["id"], {
+            fetch('http://penguins-agh-rest.azurewebsites.net/getmapstate/' + user["id"], {
                 method: 'GET'
             })
             .then(response => response.json())
