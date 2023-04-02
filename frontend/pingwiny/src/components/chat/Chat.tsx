@@ -46,7 +46,7 @@ const Chat = ({userId, chatId, nickname}:Props) => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchMessages().then((data) => {
-                setMessages(data);
+                // setMessages(data);
             });
         }, 1000);
 
