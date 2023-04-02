@@ -20,7 +20,6 @@ const LoginPage = ({setUser}:Props) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             setUser(data);
         })
         .catch(error => {
