@@ -57,6 +57,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/cleanup")
+async def cleanup():
+    users = {}
+    chats = {}
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
+
 
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
