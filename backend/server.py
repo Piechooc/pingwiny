@@ -23,18 +23,20 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
+users = {"user-id1": {"nickname": "mock", "x": 100, "y": 100, "status": "available"},
+        "user-id2": {"nickname": "mock", "x": 390, "y": 390, "status": "available"}
+}
 chats = {
     "chat_id1_mock": {
-        "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
+        "users_ids": {"user-id1": True, "user-id2": True},  # bool represents if user is currently in chat
         "active_users_count": 2,
         "messages": [
             {
-                "user-id": 1,
+                "user-id": "user-id1",
                 "message": "hello",
             },
             {
-                "user-id": 2,
+                "user-id": "user-id2",
                 "message": "hi",
             }
 
@@ -78,7 +80,7 @@ async def move(move_request: MoveRequest) -> JSONResponse:
 
 @app.get("/getmapstate/{user_id}")
 async def get_map_state(user_id: str) -> MapStateResponse:
-    MAX_LENGTH_IN_CLOUD = 20
+    MAX_LENGTH_IN_CLOUD = 10
     LAST_ITEM = -1
 
     users_response = []
@@ -99,23 +101,29 @@ async def get_map_state(user_id: str) -> MapStateResponse:
             can_access = False
 
         if can_access:
-            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD]
+            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
         else:
             text_in_cloud = "..."
 
         users_in_chat = []
+        cloud_x = 0
+        cloud_y = 0
         for user_id, is_active in chat_dict["users_ids"].items():
             user_in_chat = UserInChat(
                 id=user_id,
                 isActive=is_active,
             )
             users_in_chat.append(user_in_chat)
+            cloud_x = users[user_id]["x"]
+            cloud_y = users[user_id]["y"]
 
         chat_cloud = ChatCloud(
             chat_id=chat_id,
             users_in_chat=users_in_chat,
             can_access=can_access,
             text_in_cloud=text_in_cloud,
+            x=cloud_x,
+            y=cloud_y,
         )
         chat_clouds.append(chat_cloud)
 

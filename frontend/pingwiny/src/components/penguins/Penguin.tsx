@@ -1,6 +1,6 @@
 import { Sprite } from '@inlet/react-pixi';
 import React, { useEffect, useState } from 'react';
-import { TextStyle, Texture } from 'pixi.js';
+import { Rectangle, TextStyle, Texture } from 'pixi.js';
 import { Text } from '@pixi/react';
 
 import penguinImg from './penguin.png';
@@ -23,6 +23,7 @@ const Penguin = ({ user:{x, y, id, nickname} }: Props) => {
         x={spritePosition.x}
         y={spritePosition.y}
         scale={{ x: 0.2, y: 0.2 }}
+        hitArea={new Rectangle(spritePosition.x,spritePosition.y, 80, 80)}
         texture={Texture.from(penguinImg)}
       />
       {nickname && (
