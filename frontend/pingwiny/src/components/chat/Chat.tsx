@@ -21,26 +21,26 @@ const Chat = ({userId, chatId, nickname}:Props) => {
     const [inputValue, setInputValue] = useState<string>('');
 
     const fetchMessages = async () => {
-        try {
-            const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
-                method: 'POST',
-                headers: {
-                 'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    chat_id: chatId,
-                })
-            })
-
-            if (response.ok) {
-                console.log(response);
-                return response.json();
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Error: ' + error)
-        }
+        // try {
+        //     const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
+        //         method: 'POST',
+        //         headers: {
+        //          'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             user_id: userId,
+        //             chat_id: chatId,
+        //         })
+        //     })
+        //
+        //     if (response.ok) {
+        //         console.log(response);
+        //         return response.json();
+        //     }
+        // } catch (error) {
+        //     console.error(error);
+        //     alert('Error: ' + error)
+        // }
     };
 
     useEffect(() => {
