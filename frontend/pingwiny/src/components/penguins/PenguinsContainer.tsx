@@ -16,6 +16,27 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
   const [selectedPenguin, setSelectedPenguin] = useState<User>();
 
   const handleMyPenguinMove = (x: number, y: number) => {
+    // update position of my penguin on the server
+    fetch('http://127.0.0.1:5050/move', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: user.id,
+        x: x,
+        y: y
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error(error);
+        alert('Error: ' + error)
+    });
+
     // find the distance between myPenguin and other penguins
     const distances = penguins.map((penguin) => {
       const dx = penguin.x - x;
@@ -37,9 +58,9 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
 
   useEffect(() => {
     handleMyPenguinMove(user.x, user.y);
-    }, [user]);
+  }, [user]);
 
-    const handleButtonClick = () => {
+  const handleButtonClick = () => {
     console.log("Start talking")
   };
 
