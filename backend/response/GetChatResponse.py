@@ -10,3 +10,4 @@ class Message(BaseModel):
 
 class GetChatResponse(BaseModel):
     messages: List[Message]
+    id: str

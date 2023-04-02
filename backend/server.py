@@ -172,7 +172,7 @@ async def get_chat(get_chat_request: GetChatRequest):
                 )
             )
 
-        return GetChatResponse(messages= messages_response)
+        return GetChatResponse(messages=messages_response, id=get_chat_request.chat_id)
     else:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 

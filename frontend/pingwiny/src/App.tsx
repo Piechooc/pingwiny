@@ -24,34 +24,8 @@ interface Props{
 export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
-  const [showArchiveList, setShowArchiveList] = useState(true);
-  const [chatArchiveList, setChatArchiveList] = useState<ArchiveList[]>([{chat_id: "test", tags: ["smth", "smth"]}]);
-
-  {/*// const chatArchiveList: ArchiveList[] = [*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test", tags: "smth"},*/}
-  {/*//       {name: "test2", tags: "smth2"}*/}
-  {/*// ]*/}
-
-  {/*// const handleArchiveButtonClick = () => {*/}
-  {/*//     setShowArchiveList={true}*/}
-  {/*// };*/}
-
+  const [showArchiveList, setShowArchiveList] = useState(false);
+  const [chatArchiveList, setChatArchiveList] = useState<ArchiveList[]>([]);
   const [chat, setChat] = useState<ChatType>();
 
   return (
@@ -59,7 +33,7 @@ export const App = ({desks, clouds}:Props) =>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
           <div style={{display: 'flex', maxHeight:"90vh"}}>
             <div style={{justifyContent: 'flex-start'}}>
-              {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject chatArchiveList={chatArchiveList}/>) : null}
+              {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject user={user} chatArchiveList={chatArchiveList} setChat={setChat} setShowArchiveList={setShowArchiveList}/>) : null}
             </div>
             <div style={{justifyContent: 'flex-end' }}>
               <Map desks={desks} user={user} clouds={clouds} setUser={setUser} setShowArchiveList={setShowArchiveList} setChatArchiveList={setChatArchiveList} showArchiveList={showArchiveList} />

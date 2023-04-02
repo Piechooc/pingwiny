@@ -2,9 +2,7 @@ import React, {Dispatch, useEffect, useState} from 'react';
 import {Stage} from '@pixi/react';
 import Desk from '../../types/Desk';
 import {Graphics} from '@inlet/react-pixi';
-import MyPenguin from '../penguins/MyPenguin';
 import User from '../../types/User';
-import Penguin from '../penguins/Penguin';
 import Cloud from "../../types/Cloud";
 import { Text } from '@pixi/react';
 import PenguinsContainer from '../penguins/PenguinsContainer';
@@ -27,79 +25,23 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
     const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
     
     const handleArchiveButtonClick = () => {
+      fetch('http://127.0.0.1:5050/archive/' + user["id"], {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+          setChatArchiveList(data);
+          showArchiveList ? setShowArchiveList(false) : setShowArchiveList(true)
 
-        const chatArchiveList: ArchiveList[] = [
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        {chat_id: "test", tags: ["smth", "smth"]},
-        ]
-        setChatArchiveList(chatArchiveList);
-
-      showArchiveList ? setShowArchiveList(false) : setShowArchiveList(true)
+      })
+      .catch(error => {
+          console.error(error);
+          alert('Error: ' + error)
+      });
     };
-
-
-    // const handleArchiveButtonClick = () => {
-    //   fetch('http://127.0.0.1:5050/archive/' + user["id"], {
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     // body: JSON.stringify({
-    //     //   id: user.id,
-    //     //   x: x,
-    //     //   y: y
-    //     // })
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //       const archiveList = data[""]
-    //
-    //       const otherPenguings = data["users"].filter((onePenguing: User) => onePenguing.id != user.id);
-    //       setPenguinUsers(otherPenguings);
-    //
-    //
-    //   })
-    //   .catch(error => {
-    //       console.error(error);
-    //       alert('Error: ' + error)
-    //   });
-    //
-    //
-    //   const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       user_id1: selectedPenguin?.id,
-    //       user_id2: user.id,
-    //       is_private: false
-    //     })
-    //   })
-    //
-    //   if (response.ok) {
-    //     console.log(response);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   alert('Error: ' + error)
-    // }
-    //
-    //
-    //   showArchiveList ? setShowArchiveList(false) : setShowArchiveList(true)
-    // };
 
 
     useEffect(() => {
