@@ -5,6 +5,7 @@ import penguinImg from './penguin.png';
 import talkButton from './talkButton.png';
 import { Text } from '@pixi/react';
 import User from '../../types/User';
+import {Graphics} from '@inlet/react-pixi';
 
 type Props = {
   user: User,
@@ -26,7 +27,7 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
 
   useEffect(() => {
     // Calculate the distance between MyPenguin and each Penguin
-    setUser({x: spritePosition.x, y: spritePosition.y, nickname: user.nickname, id: user.id})
+    setUser({x: spritePosition.x, y: spritePosition.y, nickname: user.nickname, id: user.id, status: user.status})
     const distanceThreshold = 100;
     const distances = otherPenguins.map((penguinUser) => {
       const dx = penguinUser.x - spritePosition.x;
@@ -86,6 +87,17 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
       interactive={true}
       pointerdown={handleButtonClick}
     />:null}
+      <Graphics
+          draw={g => {
+              g.clear();
+              g.beginFill(0x000000);
+              g.drawCircle(spritePosition.x + 40, spritePosition.y + 20, 11);
+              g.endFill();
+              g.beginFill(    user.status == "available" ? 0x00ff00 : 0xff0000);
+              g.drawCircle(spritePosition.x + 40, spritePosition.y + 20, 10);
+              g.endFill();
+          }}
+        />
     </>
   );
 };

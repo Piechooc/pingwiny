@@ -1,6 +1,5 @@
-
-import React, { Dispatch, useEffect, useState } from 'react';
-import { Stage} from '@pixi/react';
+import React, {Dispatch, useEffect, useState} from 'react';
+import {Stage} from '@pixi/react';
 import Desk from '../../types/Desk';
 import {Graphics} from '@inlet/react-pixi';
 import MyPenguin from '../penguins/MyPenguin';
@@ -19,8 +18,8 @@ interface Props{
 
 const Map = ({desks, user, setUser, clouds}:Props) => {
     const penguinUsers: User[] = [
-        {x: 100, y: 100, nickname: "Pinguin1", id:"4"},
-        {x: 600, y: 400, nickname: "Pinguin2", id:"7"},
+        {x: 100, y: 100, nickname: "Pinguin1", id:"4", status: "available"},
+        {x: 600, y: 400, nickname: "Pinguin2", id:"7", status: "nodisturb"},
     ]
 
     return (
@@ -59,7 +58,21 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
                   scale={{ x: 0.8, y: 0.8 }}
                 />
             )}
-    </Stage>
+            {penguinUsers.map((penguinUser, index) =>
+                <Graphics
+                    key={index}
+                    draw={g => {
+                        g.clear();
+                        g.beginFill(0x000000);
+                        g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 11);
+                        g.endFill();
+                        g.beginFill(    penguinUser.status == "available" ? 0x00ff00 : 0xff0000);
+                        g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 10);
+                        g.endFill();
+                    }}
+                />
+            )}
+        </Stage>
     )
 }
 
