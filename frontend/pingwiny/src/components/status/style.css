@@ -1,0 +1,56 @@
+.dontdisturbbutton {
+  background-color: #FF0000; /* Green */
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 8px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out; /* adds a smooth transition effect */
+}
+
+.dontdisturbbutton:hover {
+  background-color: #8B0000; /* Darker green */
+}
+
+.availablebutton {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 8px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out; /* adds a smooth transition effect */
+}
+
+.availablebutton:hover {
+  background-color: #3e8e41; /* Darker green */
+}
+
+.helpbutton {
+  background-color:  #0000FF; /* Green */
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 8px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out; /* adds a smooth transition effect */
+}
+
+.helpbutton:hover {
+  background-color: #00008B; /* Darker green */
+}

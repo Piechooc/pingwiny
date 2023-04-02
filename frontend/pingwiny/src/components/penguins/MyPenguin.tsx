@@ -93,7 +93,7 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
               g.beginFill(0x000000);
               g.drawCircle(spritePosition.x + 40, spritePosition.y + 20, 11);
               g.endFill();
-              g.beginFill(    user.status == "Available" ? 0x00ff00 : 0xff0000);
+              g.beginFill(    user.status == "Available" ? 0x00ff00 : user.status == "Help" ? 0x1AA7EC : 0xff0000);
               g.drawCircle(spritePosition.x + 40, spritePosition.y + 20, 10);
               g.endFill();
           }}

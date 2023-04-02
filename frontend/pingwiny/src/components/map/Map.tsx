@@ -84,7 +84,7 @@ const Map = ({desks, user, setUser, clouds}: Props) => {
                         g.beginFill(0x000000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 11);
                         g.endFill();
-                        g.beginFill(    penguinUser.status == "Available" ? 0x00ff00 : 0xff0000);
+                        g.beginFill(    penguinUser.status == "Available" ? 0x00ff00 : penguinUser.status == "Help" ? 0x1AA7EC : 0xff0000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 10);
                         g.endFill();
                     }}
