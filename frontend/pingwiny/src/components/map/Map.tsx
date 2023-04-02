@@ -25,7 +25,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
     const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
     
     const handleArchiveButtonClick = () => {
-      fetch('http://127.0.0.1:5050/archive/' + user["id"], {
+      fetch('http://penguins-agh-rest.azurewebsites.net/archive/' + user["id"], {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
