@@ -19,7 +19,7 @@ const StatusButton = ({status, user}: Props) => {
   const onClick=() => {
     user.status = status;
     fetch('http://penguins-agh-rest.azurewebsites.net/updatestatus/', {
-            method: 'POST',
+            method: 'PUT',
             body: JSON.stringify( {
                 user_id: user.id,
                 status: status,
