@@ -4,7 +4,6 @@ import uuid
 import openai
 import os
 
-
 from response.ChatUsersResponse import ChatUsersResponse
 from request.LeaveChatRequest import LeaveChatRequest
 from request.CreateChatRequest import CreateChatRequest

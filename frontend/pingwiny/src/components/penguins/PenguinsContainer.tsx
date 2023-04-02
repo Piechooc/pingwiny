@@ -65,7 +65,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
 
       if (response.ok) {
         let chatId = await response.json().then(data=> data["chat_id"]);
-        console.log(chatId)
         try {
           const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
             method: 'PUT',
@@ -75,7 +74,59 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
               chat_id: chatId
             })
           })
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      } else {
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
+            method: 'POST',
+            headers: {
+                  'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user_id1: selectedPenguin?.id,
+              user_id2: user.id,
+              is_private: false
+            })
+          })
 
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error: ' + error)
+    }
+  };
+
+  const handlePrivateButtonClick = async () => {
+    console.log("Start private talking")
+    try {
+      const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
+        method: 'GET'
+      })
+
+      if (response.ok) {
+        let chatId = await response.json().then(data=> data["chat_id"]);
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              user_id: user.id,
+              chat_id: chatId
+            })
+          })
           if (response.ok) {
             console.log(response);
           }
@@ -91,7 +142,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
             body: JSON.stringify({
               user_id1: selectedPenguin?.id,
               user_id2: user.id,
-              is_private: false
+              is_private: true
             })
           })
 
@@ -117,7 +168,9 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         user={penguinUser}
         />
     )}
-    <MyPenguin user={user} setUser={setUser} otherPenguins={penguins} handleButtonClick={handleButtonClick} showButton={showButton}/>
+    <MyPenguin user={user} setUser={setUser} otherPenguins={penguins} handleButtonClick={handleButtonClick} showButton={showButton}
+               handlePrivateButtonClick={handlePrivateButtonClick}
+    />
 
   </>)
 };
