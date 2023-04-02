@@ -29,9 +29,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       })
     })
     .then(response => response.json())
-    .then(data => {
-        // console.log(data);
-    })
     .catch(error => {
         console.error(error);
         alert('Error: ' + error)
@@ -44,7 +41,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       return Math.sqrt(dx * dx + dy * dy);
     });
 
-    // find the closest penguin
     const minDistance = Math.min(...distances);
     const closestPenguin = penguins[distances.indexOf(minDistance)];
 
@@ -59,8 +55,50 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     handleMyPenguinMove(user.x, user.y);
   }, [user]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     console.log("Start talking")
+    try {
+      const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
+        method: 'GET'
+      })
+
+      if (response.ok) {
+        let chat_id = await response.json().then(data=> data["chat_id"]);
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/' + chat_id, {
+            method: 'PUT'
+          })
+
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      } else {
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
+            method: 'POST',
+            body: JSON.stringify({
+              user_id1: selectedPenguin?.id,
+              user_id2: user.id,
+              is_private: false
+            })
+          })
+
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error: ' + error)
+    }
   };
 
   return (

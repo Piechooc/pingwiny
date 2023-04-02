@@ -16,7 +16,7 @@ interface Props{
     clouds: Cloud[]
   }
 
-const Map = ({desks, user, setUser, clouds}:Props) => {
+const Map = ({desks, user, setUser, clouds}: Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
     }, []);
 
     return (
-    <Stage width={window.innerWidth*0.7} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
+    <Stage width={window.innerWidth*0.7} height={window.innerHeight*0.9} options={{ backgroundColor: "e0ebeb", antialias: true }}>
         {desks.map((desk, index)=>
         <Graphics
         key={index}
@@ -84,7 +84,7 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
                         g.beginFill(0x000000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 11);
                         g.endFill();
-                        g.beginFill(    penguinUser.status == "Available" ? 0x00ff00 : 0xff0000);
+                        g.beginFill(    penguinUser.status == "Available" ? 0x00ff00 : penguinUser.status == "Help" ? 0x1AA7EC : 0xff0000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 10);
                         g.endFill();
                     }}
