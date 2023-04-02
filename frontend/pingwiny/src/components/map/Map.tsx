@@ -30,13 +30,13 @@ const Map = ({desks, user, setUser, setShowArchiveList, showArchiveList, clouds}
 
     useEffect(() => {
         const penguinsUpdateInterval = setInterval(() => {
-            fetch('http://127.0.0.1:5050/getmapstate/' + user["id"], {
+            fetch('http://penguins-agh-rest.azurewebsites.net/getmapstate/' + user["id"], {
                 method: 'GET'
             })
             .then(response => response.json())
             .then(data => {
-                const otherPenguings = data["users"].filter((onePenguing: User) => onePenguing.id != user.id);
-
+                const otherPenguings = data["users"].filter((onePenguin: User) => onePenguin.id != user.id);
+        
                 setPenguinUsers(otherPenguings);
             })
             .catch(error => {
@@ -71,7 +71,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, showArchiveList, clouds}
   // };
 
     return (
-    <Stage width={window.innerWidth*0.7} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
+    <Stage width={window.innerWidth*0.7} height={window.innerHeight*0.9} options={{ backgroundColor: "e0ebeb", antialias: true }}>
         {desks.map((desk, index)=>
         <Graphics
         key={index}
@@ -114,7 +114,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, showArchiveList, clouds}
                         g.beginFill(0x000000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 11);
                         g.endFill();
-                        g.beginFill(    penguinUser.status == "available" ? 0x00ff00 : 0xff0000);
+                        g.beginFill(    penguinUser.status == "Available" ? 0x00ff00 : penguinUser.status == "Help" ? 0x1AA7EC : 0xff0000);
                         g.drawCircle(penguinUser.x + 40, penguinUser.y + 20, 10);
                         g.endFill();
                     }}

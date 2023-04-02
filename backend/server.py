@@ -4,13 +4,14 @@ import uuid
 import openai
 import os
 
+from response.ChatUsersResponse import ChatUsersResponse
 from request.LeaveChatRequest import LeaveChatRequest
 from request.CreateChatRequest import CreateChatRequest
 from request.GetChatRequest import GetChatRequest
 from request.JoinChatRequest import JoinChatRequest
 from request.UpdateStatusRequest import UpdateStatusRequest
 from response.CreateChatResponse import CreateChatResponse
-from response.GetChatResponse import GetChatResponse
+from response.GetChatResponse import GetChatResponse, Message
 from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
@@ -23,20 +24,35 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {"user-id1": {"nickname": "mock", "x": 100, "y": 100, "status": "available"},
-        "user-id2": {"nickname": "mock", "x": 390, "y": 390, "status": "available"}
+users = {
+    "user_id1":
+        {
+            "nickname": "pingwin1",
+            "x": 0,
+            "y": 0,
+            "status": "available"
+        },
+    "user_id2":
+        {
+            "nickname": "pingwin2",
+            "x": 0,
+            "y": 0,
+            "status": "available"
+        },
 }
 chats = {
     "chat_id1_mock": {
-        "users_ids": {"user-id1": True, "user-id2": True},  # bool represents if user is currently in chat
+        "users_ids": {"user_id1": True, "user_id2": True},  # bool represents if user is currently in chat
         "active_users_count": 2,
         "messages": [
             {
-                "user-id": "user-id1",
+                "user_id": "user_id1",
+                "nickname": "pingwin1",
                 "message": "hello",
             },
             {
-                "user-id": "user-id2",
+                "user_id": "user_id2",
+                "nickname": "pingwin2",
                 "message": "hi",
             }
 
@@ -57,12 +73,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/cleanup")
+async def cleanup():
+    global users, chats
+    users = {}
+    chats = {}
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
+
 
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
     new_id = str(uuid.uuid4())
-    users[new_id] = {"nickname": nickname, "x": 0, "y": 0, "status": "available"}
-    return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
+    users[new_id] = {"nickname": nickname, "x": 0, "y": 0, "status": "Available"}
+    return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="Available")
 
 
 @app.put("/updatestatus")
@@ -133,11 +157,21 @@ async def get_map_state(user_id: str) -> MapStateResponse:
     )
 
 
-@app.get("/getchat")
+@app.post("/getchat")
 async def get_chat(get_chat_request: GetChatRequest):
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
-        return GetChatResponse(msg=chat["messages"])
+        messages_response = []
+        for message in chat["messages"]:
+            messages_response.append(
+                Message(
+                    user_id=message["user_id"],
+                    nickname=message["nickname"],
+                    message=message["message"]
+                )
+            )
+
+        return GetChatResponse(messages= messages_response)
     else:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
@@ -165,7 +199,12 @@ async def create_chat(create_chat_request: CreateChatRequest):
 @app.put("/writemessage")
 async def write_msg(write_message_request: WriteMessageRequest) -> JSONResponse:
     chat = chats[write_message_request.chat_id]
-    chat["messages"].append({"user-id": write_message_request.user_id, "message": write_message_request.message})
+    chat["messages"].append(
+        {
+            "user_id": write_message_request.user_id,
+            "nickname": write_message_request.nickname,
+            "message": write_message_request.message,
+        })
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
@@ -192,3 +231,11 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
         chats.pop(chat_id)
         return LeaveChatResponse(active=False)
     return LeaveChatResponse(active=True)
+
+
+@app.get("/chatusers/{user_id}")
+async def user_login(user_id: str):
+    for chat_id in chats.keys():
+        if chats[chat_id]["users_ids"][user_id]:
+            return ChatUsersResponse(chat_id=chat_id)
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")

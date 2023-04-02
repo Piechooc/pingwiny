@@ -1,6 +1,4 @@
 import './App.css';
-import { Stage, Container, Sprite, Text } from '@pixi/react';
-import { useMemo } from 'react';
 import Desk from './types/Desk';
 import Map from  './components/map/Map';
 import LoginPage from './components/login/LoginPage';
@@ -8,10 +6,11 @@ import { useState } from 'react';
 import User from './types/User';
 import StatusButton from "./components/status/Status"
 import Cloud from './types/Cloud';
-
+import Chat from "./components/chat/Chat";
+import ChatType from './types/ChatType';
 import ArchiveObject from "./components/archive/ChatArchiveList";
 import ChatArchive from "./types/ChatArchive";
-import Chat from "./components/chat/Chat";
+
 interface Props{
   desks: Desk[],
   clouds: Cloud[],
@@ -47,22 +46,24 @@ export const App = ({desks, clouds}:Props) =>
   //     setShowArchiveList={true}
   // };
 
+  const [chat, setChat] = useState<ChatType>();
 
   return (
     <>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
-        <div style={{display: 'flex', justifyContent: 'flex-end' }}>
-          <div style={{justifyContent: 'flex-start'}}>
-            {!showArchiveList ?
-              <Chat userId={user.id} chatId={user.id}/> :
+          <div style={{display: 'flex', }}>
+            <div style={{justifyContent: 'flex-start'}}>
+              {chat && user ? (!showArchiveList ?
+              <Chat user={user} chatId={chat.id} nickname={user.nickname}/> :
               <ArchiveObject chatList={chatArchiveList}/>
-            }
-          </div>
-          <div style={{justifyContent: 'flex-end'}}>
-              <Map desks={desks} user={user} setUser={setUser} setShowArchiveList={setShowArchiveList} showArchiveList={showArchiveList} clouds={clouds}/>
-          </div>
-        </div>}
-      {user ? (<div style={{display:"flex"}}>
+            )  : null }
+            </div>
+            <div style={{justifyContent: 'flex-end' }}>
+              <Map desks={desks} user={user} clouds={clouds} setUser={setUser} setShowArchiveList={setShowArchiveList} showArchiveList={showArchiveList} />
+            </div>
+          </div>}
+      {user ? (
+      <div style={{display:"flex"}}>
         <div>
           <StatusButton status={"Don't Disturb"} user={user}/>
         </div>
