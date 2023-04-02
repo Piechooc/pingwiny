@@ -27,15 +27,15 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
             })
             .then(response => response.json())
             .then(data => {
-                const users = data["users"];
+                const otherPenguings = data["users"].filter((onePenguing: User) => onePenguing.id != user.id);
         
-                setPenguinUsers(users);
+                setPenguinUsers(otherPenguings);
             })
             .catch(error => {
                 console.error(error);
                 alert('Error: ' + error)
             });
-        }, 1000);
+        }, 200);
         return () => {
             clearInterval(penguinsUpdateInterval);
         };
