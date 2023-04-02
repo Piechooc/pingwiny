@@ -10,8 +10,8 @@ from request.GetChatRequest import GetChatRequest
 from request.JoinChatRequest import JoinChatRequest
 from request.UpdateStatusRequest import UpdateStatusRequest
 from response.CreateChatResponse import CreateChatResponse
+from response.GetChatResponse import GetChatResponse
 from response.LeaveChatResponse import LeaveChatResponse
-from response.GetChatResponse import Message, GetChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 from tagging import tag_chat
@@ -76,26 +76,26 @@ app.add_middleware(
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
     new_id = str(uuid.uuid4())
-    users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
+    users[new_id] = {"nickname": nickname, "x": 0, "y": 0, "status": "available"}
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
 
-@app.put("/updatestatus/{updateStatusRequest}")
+@app.put("/updatestatus")
 async def update_status(update_status_request: UpdateStatusRequest) -> JSONResponse:
     users[update_status_request.user_id]["status"] = update_status_request.status
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.put("/move/{moveRequest}")
+@app.put("/move")
 async def move(move_request: MoveRequest) -> JSONResponse:
     users[move_request.id]["x"] = move_request.x
     users[move_request.id]["y"] = move_request.y
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.get("/getmapstate/{userId}")
-async def get_map_state(user_id) -> MapStateResponse:
-    MAX_LENGTH_IN_CLOUD = 20
+@app.get("/getmapstate/{user_id}")
+async def get_map_state(user_id: str) -> MapStateResponse:
+    MAX_LENGTH_IN_CLOUD = 10
     LAST_ITEM = -1
 
     users_response = []
@@ -116,23 +116,29 @@ async def get_map_state(user_id) -> MapStateResponse:
             can_access = False
 
         if can_access:
-            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD]
+            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
         else:
             text_in_cloud = "..."
 
         users_in_chat = []
+        cloud_x = 0
+        cloud_y = 0
         for user_id, is_active in chat_dict["users_ids"].items():
             user_in_chat = UserInChat(
                 id=user_id,
                 isActive=is_active,
             )
             users_in_chat.append(user_in_chat)
+            cloud_x = users[user_id]["x"]
+            cloud_y = users[user_id]["y"]
 
         chat_cloud = ChatCloud(
             chat_id=chat_id,
             users_in_chat=users_in_chat,
             can_access=can_access,
             text_in_cloud=text_in_cloud,
+            x=cloud_x,
+            y=cloud_y,
         )
         chat_clouds.append(chat_cloud)
 
@@ -161,7 +167,7 @@ async def get_chat(get_chat_request: GetChatRequest):
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-@app.put("/joinchat/{joinChatRequest}")
+@app.put("/joinchat")
 async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
     chat = chats[join_chat_request.chat_id]
     if not chat["is_private"]:
@@ -170,7 +176,7 @@ async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.post("/createchat/{createChatRequest}")
+@app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest):
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
@@ -181,7 +187,7 @@ async def create_chat(create_chat_request: CreateChatRequest):
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-@app.put("/writemessage/{writeMessageRequest}")
+@app.put("/writemessage")
 async def write_msg(write_message_request: WriteMessageRequest) -> JSONResponse:
     chat = chats[write_message_request.chat_id]
     chat["messages"].append(
@@ -200,7 +206,7 @@ def merge_messages(chat_id: str):
     return chat
 
 
-@app.put("/leavechat/{leaveChatRequest}")
+@app.put("/leavechat")
 def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
