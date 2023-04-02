@@ -8,6 +8,7 @@ import { Text } from '@pixi/react';
 import PenguinsContainer from '../penguins/PenguinsContainer';
 import ChatArchiveObject from "../archive/ChatArchiveObject";
 import ArchiveList from "../../types/ArchiveList";
+import ChatType from '../../types/ChatType';
 
 interface Props{
     desks: Desk[],
@@ -16,14 +17,16 @@ interface Props{
     setShowArchiveList: Dispatch<boolean>,
     showArchiveList: boolean,
     setChatArchiveList: Dispatch<ArchiveList[]>,
-    clouds: Cloud[]
+    clouds: Cloud[],
+    setChat: Dispatch<ChatType>
   }
 
-const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, clouds}:Props) => {
+const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, setChat, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
     const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
-    
+    const [newClouds, setClouds] = useState<Cloud[]>([]);
+
     const handleArchiveButtonClick = () => {
       fetch('http://penguins-agh-rest.azurewebsites.net/archive/' + user["id"], {
         method: 'GET',
@@ -39,7 +42,6 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
       })
       .catch(error => {
           console.error(error);
-          alert('Error: ' + error)
       });
     };
 
@@ -52,12 +54,14 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
             .then(response => response.json())
             .then(data => {
                 const otherPenguings = data["users"].filter((onePenguin: User) => onePenguin.id != user.id);
-        
+                const newCloudsList = data["chat_clouds"]
+
+                setClouds(newCloudsList)
                 setPenguinUsers(otherPenguings);
             })
             .catch(error => {
                 console.error(error);
-                alert('Error: ' + error)
+                ('Error: ' + error)
             });
         }, 200);
         return () => {
@@ -93,8 +97,8 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
         }}
         />
         )}
-        <PenguinsContainer user={user} penguins={penguinUsers} setUser={setUser}/>
-        {clouds.map((cloud, index) =>
+        <PenguinsContainer user={user} penguins={penguinUsers} setUser={setUser} setChat={setChat}/>
+        {newClouds.map((cloud, index) =>
                 <Graphics
                     key={index}
                     draw={g => {
@@ -108,7 +112,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
                     }}
                 />
             )}
-            {clouds.map((cloud, index) =>
+            {newClouds.map((cloud, index) =>
                 <Text
                   text={cloud.text}
                   x={cloud.x + 60}

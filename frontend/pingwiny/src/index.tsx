@@ -15,8 +15,6 @@ let desks: Desk[] = [
 ];
 
 let clouds: Cloud[] = [
-  { x: 100, y: 100, text: "Hello..." },
-  { x: 400, y: 100, text: "Hi..." },
 ]
 
 const root = ReactDOM.createRoot(
