@@ -89,8 +89,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
                   'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              user_id1: selectedPenguin?.id,
-              user_id2: user.id,
+              user_id1: user.id,
+              user_id2: selectedPenguin?.id,
               is_private: false
             })
           })
@@ -140,8 +140,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-              user_id1: selectedPenguin?.id,
-              user_id2: user.id,
+              user_id1: user.id,
+              user_id2: selectedPenguin?.id,
               is_private: true
             })
           })
