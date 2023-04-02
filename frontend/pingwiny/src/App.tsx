@@ -20,7 +20,7 @@ export const App = ({desks}:Props) =>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
       <div style={{display: 'flex'}}>
           <div style={{justifyContent: 'flex-start' }}>
-              <Chat userId={user.id} chatId={user.id}/>
+              <Chat userId={user.id} chatId={user.id} nickname={user.nickname}/>
           </div>
           <div style={{justifyContent: 'flex-end' }}>
               <Map desks={desks} user={user}/>

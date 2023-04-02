@@ -5,8 +5,9 @@ import {TextField} from "@mui/material";
 import user from "../../types/User";
 
 interface Message {
-    user: string;
-    text: string;
+    user_id: string
+    nickname: string
+    message: string
 }
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const Chat = ({userId, chatId, nickname}:Props) => {
-    const [messages, setMessages] = useState<string[]>('');
+    const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
 
     const fetchMessages = async () => {
@@ -30,6 +31,7 @@ const Chat = ({userId, chatId, nickname}:Props) => {
             })
 
             if (response.ok) {
+                console.log(response);
                 return response.json();
             }
         } catch (error) {
@@ -55,7 +57,6 @@ const Chat = ({userId, chatId, nickname}:Props) => {
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             // Send the message to the server
-            const message = { user: 'me', text: inputValue };
             try {
                 const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
                     method: 'POST',
@@ -68,7 +69,11 @@ const Chat = ({userId, chatId, nickname}:Props) => {
                 });
                 if (response.ok) {
                     // Add the message to the list of messages
-                    setMessages([inputValue, ...messages]);
+                    setMessages([{
+                        user_id: userId,
+                        nickname: nickname,
+                        message: inputValue
+                    }, ...messages]);
 
                     // Clear the input value
                     setInputValue('');
@@ -85,9 +90,8 @@ const Chat = ({userId, chatId, nickname}:Props) => {
 
     return (
         <Stage width={window.innerWidth*0.3} height={window.innerHeight*0.9}>
-            <Container>
                 {messages?.map((message, index) => (
-                    <Text key={index} text={`${message.user}: ${message.text}`} y={index * 30} />
+                    <Text key={index} text={`${message.nickname}: ${message.message}`} y={index * 30} />
                 ))}
                 <Graphics
                     height={30}
@@ -99,7 +103,6 @@ const Chat = ({userId, chatId, nickname}:Props) => {
                     pointerdown={handleKeyDown}
                 />
                 <TextField id={"input"} label={"Write message"} value={inputValue} onChange={handleInputChange}/>
-            </Container>
         </Stage>
     );
 };
