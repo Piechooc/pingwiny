@@ -16,10 +16,11 @@ from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 from tagging import tag_chat
+from typing import List
 
 from request.MoveRequest import MoveRequest
 from request.WriteMessageRequest import WriteMessageRequest
-from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
+from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud, ArchiveChat
 from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
@@ -187,7 +188,7 @@ async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
 
 @app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest):
-    if users[create_chat_request.user_id2]["status"] != "not disturb":
+    if users[create_chat_request.user_id2]["status"] != "Don't disturb":
         new_chat_id = uuid.uuid4()
         chats[new_chat_id] = {"users_ids": {create_chat_request.user_id1: True, create_chat_request.user_id2: True},
                               "active_users_count": 2, "messages": [],
@@ -224,7 +225,8 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
-        tag = tag_chat(chat)
+        chat_messages = merge_messages(chat_id)
+        tag = tag_chat(chat_messages)
         tagged_chats = archive.get(tag, dict())
         tagged_chats[chat_id] = chat
         archive[tag] = tagged_chats
@@ -236,6 +238,23 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 @app.get("/chatusers/{user_id}")
 async def user_login(user_id: str):
     for chat_id in chats.keys():
-        if chats[chat_id]["users_ids"][user_id]:
+        if user_id in chats[chat_id]["users_ids"] and chats[chat_id]["users_ids"][user_id]:
             return ChatUsersResponse(chat_id=chat_id)
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
+
+
+@app.get("/archive/{user_id}")
+async def get_archive_chats(user_id: str) -> List[ArchiveChat]:
+    archive_chats = []
+
+    for tag, chats in archive.items():
+        for chat_id, chat in chats.items():
+            if not (chat["is_private"] and user_id not in chat["users_ids"].keys()):
+                archive_chats.append(
+                    ArchiveChat(
+                        chat_id=chat_id,
+                        tags=[tag]
+                    )
+                )
+
+    return archive_chats

@@ -3,6 +3,7 @@ import React, { Dispatch, useEffect, useState } from 'react';
 import { Texture} from 'pixi.js';
 import penguinImg from './penguin.png';
 import talkButton from './talkButton.png';
+import privateTalkButton from './privateTalkButton.png';
 import { Text } from '@pixi/react';
 import User from '../../types/User';
 import {Graphics} from '@inlet/react-pixi';
@@ -12,10 +13,11 @@ type Props = {
   otherPenguins: User[],
   setUser: Dispatch<User>,
   handleButtonClick: () => void,
-  showButton: boolean
+  showButton: boolean,
+  handlePrivateButtonClick: () => void,
 };
 
-const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton }: Props) => {
+const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton, handlePrivateButtonClick}: Props) => {
   const [spritePosition, setSpritePosition] = useState({ x: 100, y: 100 });
 
   useEffect(() => {
@@ -81,12 +83,21 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
     />
     {showButton ? <Sprite
       texture={Texture.from(talkButton)}
-      x={spritePosition.x}
-      y={spritePosition.y}
+      x={spritePosition.x + 55}
+      y={spritePosition.y - 120}
       scale={{ x: 0.4, y: 0.4 }}
       interactive={true}
       pointerdown={handleButtonClick}
     />:null}
+    {showButton ? <Sprite
+      texture={Texture.from(privateTalkButton)}
+      x={spritePosition.x + 55}
+      y={spritePosition.y - 85}
+      scale={{ x: 0.4, y: 0.4 }}
+      interactive={true}
+      pointerdown={handlePrivateButtonClick}
+    />:null}
+
       <Graphics
           draw={g => {
               g.clear();

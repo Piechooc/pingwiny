@@ -27,3 +27,8 @@ class ChatCloud(BaseModel):
 class MapStateResponse(BaseModel):
     users: List[User]
     chat_clouds: List[ChatCloud]
+
+
+class ArchiveChat(BaseModel):
+    chat_id: str
+    tags: List[str]
