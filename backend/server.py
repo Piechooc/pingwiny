@@ -10,8 +10,8 @@ from request.GetChatRequest import GetChatRequest
 from request.JoinChatRequest import JoinChatRequest
 from request.UpdateStatusRequest import UpdateStatusRequest
 from response.CreateChatResponse import CreateChatResponse
-from response.GetChatResponse import GetChatResponse
 from response.LeaveChatResponse import LeaveChatResponse
+from response.GetChatResponse import Message, GetChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 from tagging import tag_chat
@@ -146,7 +146,17 @@ async def get_map_state(user_id) -> MapStateResponse:
 async def get_chat(get_chat_request: GetChatRequest):
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
-        return GetChatResponse(msg=chat["messages"])
+        messages_response = []
+        for message in chat["messages"]:
+            messages_response.append(
+                Message(
+                    user_id=message["user_id"],
+                    nickname=message["nickname"],
+                    message=message["message"]
+                )
+            )
+
+        return GetChatResponse(messages= messages_response)
     else:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
