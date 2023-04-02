@@ -128,6 +128,8 @@ async def get_map_state(user_id: str) -> MapStateResponse:
         if can_access:
             if chat_dict["messages"]:
                 text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
+            else:
+                text_in_cloud = ""
         else:
             text_in_cloud = "..."
 
