@@ -6,6 +6,8 @@ import Map from  './components/map/Map';
 import LoginPage from './components/login/LoginPage';
 import { useState } from 'react';
 import User from './types/User';
+import StatusButton from "./components/status/Status"
+
 interface Props{
   desks: Desk[],
 }
@@ -20,6 +22,17 @@ export const App = ({desks}:Props) =>
         <div style={{display: 'flex', justifyContent: 'flex-end' }}>
             <Map desks={desks} user={user}/>
         </div>}
+      {user ? (<div style={{display:"flex"}}>
+        <div>
+          <StatusButton status={"Don't Disturb"} user={user}/>
+        </div>
+        <div>
+          <StatusButton status={"Help"} user={user}/>
+        </div>
+        <div>
+          <StatusButton status={"Available"} user={user}/>
+        </div>
+      </div>):null}
     </>
   );
 };

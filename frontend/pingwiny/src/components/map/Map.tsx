@@ -13,8 +13,8 @@ interface Props{
 
 const Map = ({desks, user}:Props) => {
     const penguinUsers: User[] = [
-        {x: 100, y: 100, nickname: "Pinguin1", id:"4"},
-        {x: 600, y: 400, nickname: "Pinguin2", id:"7"},
+        {x: 100, y: 100, nickname: "Pinguin1", id:"4", status: "m"},
+        {x: 600, y: 400, nickname: "Pinguin2", id:"7", status: "t"},
     ]
 
     return (

@@ -16,7 +16,7 @@ const LoginPage = ({setUser}:Props) => {
         
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        setUser({nickname, id: "1", x: 100, y: 100});
+        setUser({nickname, id: "1", x: 100, y: 100, status: "i"});
 
         fetch('http://penguins-agh-rest.azurewebsites.net/userlogin/' + nickname, {
             method: 'POST'
