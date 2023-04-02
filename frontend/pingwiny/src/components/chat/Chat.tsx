@@ -53,11 +53,7 @@ const Chat = ({user, chatId, nickname}: Props) => {
 
     const handleKeyDown = async (event: any) => {
         event.preventDefault();
-        setMessages([{
-            user_id: user.id,
-            nickname: user.nickname,
-            message: inputValue
-        }, ...messages]);
+
             // Send the message to the server
 
             try {
