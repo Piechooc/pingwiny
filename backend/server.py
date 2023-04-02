@@ -29,7 +29,7 @@ users = {}
 
 chats = {}
 
-archive = {" mock tag": {"chat_id1_mock": {
+archive = {" mock tag": {"Chat mock": {
     "users_ids": {"user_id1": False, "user_id2": False},  # bool represents if user is currently in chat
     "active_users_count": 0,
     "messages": [
