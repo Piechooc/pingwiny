@@ -44,6 +44,8 @@ const MyPenguin = ({ user:{x, y, id, nickname="me"} }: Props) => {
         x: prevPosition.x + speed,
       }));
     }
+
+    console.log(spritePosition);
   };
 
   return (

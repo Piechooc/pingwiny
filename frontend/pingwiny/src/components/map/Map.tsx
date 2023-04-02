@@ -12,10 +12,28 @@ interface Props{
   }
 
 const Map = ({desks, user}:Props) => {
-    const penguinUsers: User[] = [
-        {x: 100, y: 100, nickname: "Pinguin1", id:"4"},
-        {x: 600, y: 400, nickname: "Pinguin2", id:"7"},
-    ]
+    const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        const penguinsUpdateInterval = setInterval(() => {
+            fetch('http://127.0.0.1:5050/getmapstate/' + user["id"], {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const users = data["users"];
+        
+                setPenguinUsers(users);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Error: ' + error)
+            });
+        }, 1000);
+        return () => {
+            clearInterval(penguinsUpdateInterval);
+        };
+    }, []);
 
     return (
     <Stage width={1100} height={750} options={{ backgroundColor: "e0ebeb", antialias: true }}>
