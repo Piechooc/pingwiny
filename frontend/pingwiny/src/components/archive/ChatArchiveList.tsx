@@ -18,7 +18,7 @@ interface Props {
 
 export default function ChatArchive({user, chatArchiveList, setChat, setShowArchiveList}: Props) {
     const handleListItemClick = (chat_id: string) => {
-        fetch('http://127.0.0.1:5050/getchat', {
+        fetch('http://penguins-agh-rest.azurewebsites.net/getchat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
