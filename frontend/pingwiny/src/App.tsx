@@ -13,7 +13,8 @@ import Cloud from './types/Cloud';
 import Chat from "./components/chat/Chat";
 import ChatType from './types/ChatType';
 import ArchiveObject from "./components/archive/ChatArchiveList";
-import ChatArchive from "./types/ChatArchive";
+import ArchiveList from "./types/ArchiveList";
+
 
 interface Props{
   desks: Desk[],
@@ -23,32 +24,33 @@ interface Props{
 export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
-  const [showArchiveList, setShowArchiveList] = useState(false);
+  const [showArchiveList, setShowArchiveList] = useState(true);
+  const [chatArchiveList, setChatArchiveList] = useState<ArchiveList[]>([{chat_id: "test", tags: ["smth", "smth"]}]);
 
-  const chatArchiveList: ChatArchive[] = [
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test", tags: "smth"},
-        {name: "test2", tags: "smth2"}
-  ]
+  {/*// const chatArchiveList: ArchiveList[] = [*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test", tags: "smth"},*/}
+  {/*//       {name: "test2", tags: "smth2"}*/}
+  {/*// ]*/}
 
-  // const handleArchiveButtonClick = () => {
-  //     setShowArchiveList={true}
-  // };
+  {/*// const handleArchiveButtonClick = () => {*/}
+  {/*//     setShowArchiveList={true}*/}
+  {/*// };*/}
 
   const [chat, setChat] = useState<ChatType>();
 
@@ -57,10 +59,10 @@ export const App = ({desks, clouds}:Props) =>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
           <div style={{display: 'flex', }}>
             <div style={{justifyContent: 'flex-start'}}>
-              {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject chatList={chatArchiveList}/>) : null}
+              {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject chatArchiveList={chatArchiveList}/>) : null}
             </div>
             <div style={{justifyContent: 'flex-end' }}>
-              <Map desks={desks} user={user} clouds={clouds} setUser={setUser} setShowArchiveList={setShowArchiveList} showArchiveList={showArchiveList} />
+              <Map desks={desks} user={user} clouds={clouds} setUser={setUser} setShowArchiveList={setShowArchiveList} setChatArchiveList={setChatArchiveList} showArchiveList={showArchiveList} />
             </div>
           </div>}
       {user ? (
