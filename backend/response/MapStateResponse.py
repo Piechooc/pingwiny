@@ -20,6 +20,8 @@ class ChatCloud(BaseModel):
     users_in_chat: List[UserInChat]
     can_access: bool
     text_in_cloud: str
+    x: int
+    y: int
 
 
 class MapStateResponse(BaseModel):
