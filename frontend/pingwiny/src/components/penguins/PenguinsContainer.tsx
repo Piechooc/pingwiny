@@ -30,7 +30,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
+        // console.log(data);
     })
     .catch(error => {
         console.error(error);
@@ -45,7 +45,6 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     });
 
     // find the closest penguin
-    console.log(distances)
     const minDistance = Math.min(...distances);
     const closestPenguin = penguins[distances.indexOf(minDistance)];
 

@@ -63,8 +63,6 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
         x: prevPosition.x + speed,
       }));
     }
-
-    console.log(spritePosition);
   };
 
   return (
