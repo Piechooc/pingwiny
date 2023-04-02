@@ -63,12 +63,16 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
       })
 
       if (response.ok) {
-        let chat_id = await response.json().then(data=> data["chat_id"]);
+        let chatId = await response.json().then(data=> data["chat_id"]);
         try {
-          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/' + chat_id, {
-            method: 'PUT'
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              user_id: user.id,
+              chat_id: chatId
+            })
           })
-
           if (response.ok) {
             console.log(response);
           }
@@ -104,53 +108,57 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
     }
   };
 
-    const handlePrivateButtonClick = async () => {
-      console.log("Start talking")
-      try {
-        const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
-          method: 'GET'
-        })
+  const handlePrivateButtonClick = async () => {
+    console.log("Start private talking")
+    try {
+      const response = await fetch('http://penguins-agh-rest.azurewebsites.net/chatusers/' + selectedPenguin?.id, {
+        method: 'GET'
+      })
 
-        if (response.ok) {
-          let chat_id = await response.json().then(data=> data["chat_id"]);
-          try {
-            const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/' + chat_id, {
-              method: 'PUT'
+      if (response.ok) {
+        let chatId = await response.json().then(data=> data["chat_id"]);
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/joinchat/', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              user_id: user.id,
+              chat_id: chatId
             })
-
-            if (response.ok) {
-              console.log(response);
-            }
-          } catch (error) {
-            console.error(error);
-            alert('Error: ' + error)
+          })
+          if (response.ok) {
+            console.log(response);
           }
-        } else {
-          try {
-            const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                user_id1: selectedPenguin?.id,
-                user_id2: user.id,
-                is_private: true
-              })
-            })
-
-            if (response.ok) {
-              console.log(response);
-            }
-          } catch (error) {
-            console.error(error);
-            alert('Error: ' + error)
-          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
         }
-      } catch (error) {
-        console.error(error);
-        alert('Error: ' + error)
+      } else {
+        try {
+          const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
+            method: 'POST',
+            headers: {
+                  'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              user_id1: selectedPenguin?.id,
+              user_id2: user.id,
+              is_private: false
+            })
+          })
+
+          if (response.ok) {
+            console.log(response);
+          }
+        } catch (error) {
+          console.error(error);
+          alert('Error: ' + error)
+        }
       }
+    } catch (error) {
+      console.error(error);
+      alert('Error: ' + error)
+    }
   };
 
   return (
