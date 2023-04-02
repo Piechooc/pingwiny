@@ -11,7 +11,7 @@ from request.GetChatRequest import GetChatRequest
 from request.JoinChatRequest import JoinChatRequest
 from request.UpdateStatusRequest import UpdateStatusRequest
 from response.CreateChatResponse import CreateChatResponse
-from response.GetChatResponse import GetChatResponse
+from response.GetChatResponse import GetChatResponse, Message
 from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
