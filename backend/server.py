@@ -123,7 +123,7 @@ async def get_map_state(user_id: str) -> MapStateResponse:
     text_in_cloud = ""
     for chat_id, chat_dict in chats.items():
         can_access = True
-        if chat_dict["is_private"] and user_id not in chat_dict["user_ids"].values():
+        if chat_dict["is_private"] and user_id not in chat_dict["users_ids"].values():
             can_access = False
 
         if can_access:
