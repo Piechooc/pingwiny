@@ -83,16 +83,16 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
     />
     {showButton ? <Sprite
       texture={Texture.from(talkButton)}
-      x={spritePosition.x + 55}
-      y={spritePosition.y - 120}
+      x={spritePosition.x + 140}
+      y={spritePosition.y - 10}
       scale={{ x: 0.4, y: 0.4 }}
       interactive={true}
       pointerdown={handleButtonClick}
     />:null}
     {showButton ? <Sprite
       texture={Texture.from(privateTalkButton)}
-      x={spritePosition.x + 55}
-      y={spritePosition.y - 85}
+      x={spritePosition.x + 140}
+      y={spritePosition.y+30}
       scale={{ x: 0.4, y: 0.4 }}
       interactive={true}
       pointerdown={handlePrivateButtonClick}

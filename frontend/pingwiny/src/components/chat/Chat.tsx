@@ -33,7 +33,6 @@ const Chat = ({user, chatId, nickname}: Props) => {
             }
         } catch (error) {
             console.error(error);
-            alert('Error: ' + error)
         }
     };
 

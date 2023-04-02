@@ -99,8 +99,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
             console.log(response);
           }
         } catch (error) {
-          console.error(error);
-          alert('Error: ' + error)
+          console.error("create chat", error);
         }
       }
     } catch (error) {
