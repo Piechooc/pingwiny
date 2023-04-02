@@ -1,4 +1,6 @@
 import './App.css';
+import { Stage, Container, Sprite, Text } from '@pixi/react';
+import {Dispatch, useMemo} from 'react';
 import Desk from './types/Desk';
 import Map from  './components/map/Map';
 import LoginPage from './components/login/LoginPage';

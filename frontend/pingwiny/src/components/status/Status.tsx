@@ -6,6 +6,7 @@ import MyPenguin from "../penguins/MyPenguin";
 import Desk from "../../types/Desk";
 import User from "../../types/User";
 import {Button} from "@mui/material";
+import './style.css'
 
 
 
@@ -35,9 +36,18 @@ const StatusButton = ({status, user}: Props) => {
   }
 
   return (
-      <Button onClick={onClick}>
+      status == "Available" ?
+      <button className="availablebutton" onClick={onClick}>
         {status}
-      </Button>
+      </button> :
+      status == "Help" ?
+      <button className="helpbutton" onClick={onClick}>
+        {status}
+      </button> :
+          <button className="dontdisturbbutton" onClick={onClick}>
+        {status}
+      </button>
+
     );
 };
 

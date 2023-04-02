@@ -236,6 +236,6 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 @app.get("/chatusers/{user_id}")
 async def user_login(user_id: str):
     for chat_id in chats.keys():
-        if chats[chat_id]["users_ids"][user_id]:
+        if user_id in chats[chat_id]["users_ids"] and chats[chat_id]["users_ids"][user_id]:
             return ChatUsersResponse(chat_id=chat_id)
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")

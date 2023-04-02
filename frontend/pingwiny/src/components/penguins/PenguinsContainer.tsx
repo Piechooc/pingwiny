@@ -137,13 +137,11 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         try {
           const response = await fetch('http://penguins-agh-rest.azurewebsites.net/createchat/', {
             method: 'POST',
-            headers: {
-                  'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
               user_id1: selectedPenguin?.id,
               user_id2: user.id,
-              is_private: false
+              is_private: true
             })
           })
 
