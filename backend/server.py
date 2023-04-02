@@ -23,18 +23,35 @@ from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
 
-users = {"user_id1_mock": {"nickname": "mock", "x": 0, "y": 0, "status": "available"}}
+users = {
+    "user_id1":
+        {
+            "nickname": "pingwin1",
+            "x": 0,
+            "y": 0,
+            "status": "available"
+        },
+    "user_id2":
+        {
+            "nickname": "pingwin2",
+            "x": 0,
+            "y": 0,
+            "status": "available"
+        },
+}
 chats = {
     "chat_id1_mock": {
-        "users_ids": {"user-id": True, "user-id2": True},  # bool represents if user is currently in chat
+        "users_ids": {"user_id1": True, "user_id2": True},  # bool represents if user is currently in chat
         "active_users_count": 2,
         "messages": [
             {
-                "user-id": 1,
+                "user_id": "user_id1",
+                "nickname": "pingwin1",
                 "message": "hello",
             },
             {
-                "user-id": 2,
+                "user_id": "user_id2",
+                "nickname": "pingwin2",
                 "message": "hi",
             }
 
@@ -121,7 +138,7 @@ async def get_map_state(user_id) -> MapStateResponse:
 
     return MapStateResponse(
         chat_clouds=chat_clouds,
-        users=users,
+        users=users_response,
     )
 
 
@@ -157,7 +174,12 @@ async def create_chat(create_chat_request: CreateChatRequest):
 @app.put("/writemessage/{writeMessageRequest}")
 async def write_msg(write_message_request: WriteMessageRequest) -> JSONResponse:
     chat = chats[write_message_request.chat_id]
-    chat["messages"].append({"user-id": write_message_request.user_id, "message": write_message_request.message})
+    chat["messages"].append(
+        {
+            "user_id": write_message_request.user_id,
+            "nickname": write_message_request.nickname,
+            "message": write_message_request.message,
+        })
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
