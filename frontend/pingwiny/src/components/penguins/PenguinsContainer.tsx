@@ -4,14 +4,17 @@ import Penguin from "./Penguin";
 import User from "../../types/User";
 import { Button } from "@mui/material";
 import { Text } from "@pixi/react";
+import ChatType from "../../types/ChatType";
 
 interface Props {
     penguins: User[],
     user: User,
-    setUser: Dispatch<User>
+    setUser: Dispatch<User>,
+    setChat: Dispatch<ChatType >
+
 }
 
-const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
+const PenguinsContainer = ({ penguins, user, setUser, setChat }: Props) => {
   const [showButton, setShowButton] = useState(false);
   const [selectedPenguin, setSelectedPenguin] = useState<User>();
 
@@ -62,7 +65,8 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
         method: 'GET',
         headers: {'Access-Control-Allow-Origin':'*'}
       })
-
+      console.log(response.body)
+      
       if (response.ok) {
         let chatId = await response.json().then(data=> data["chat_id"]);
         try {
@@ -75,7 +79,7 @@ const PenguinsContainer = ({ penguins, user, setUser }: Props) => {
             })
           })
           if (response.ok) {
-            console.log(response);
+            setChat({id: chatId, messages:[]} )
           }
         } catch (error) {
           console.error(error);
