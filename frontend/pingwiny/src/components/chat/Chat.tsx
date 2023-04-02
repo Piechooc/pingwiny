@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Graphics, Stage, Text} from '@pixi/react';
 import {Rectangle} from 'pixi.js';
+import {TextField} from "@mui/material";
+import user from "../../types/User";
 
 interface Message {
     user: string;
@@ -10,10 +12,11 @@ interface Message {
 interface Props {
     userId: string;
     chatId: string;
+    nickname: string;
 }
 
-const Chat = ({userId, chatId}:Props) => {
-    const [messages, setMessages] = useState<Message[]>([]);
+const Chat = ({userId, chatId, nickname}:Props) => {
+    const [messages, setMessages] = useState<string[]>('');
     const [inputValue, setInputValue] = useState<string>('');
 
     const fetchMessages = async () => {
@@ -36,10 +39,14 @@ const Chat = ({userId, chatId}:Props) => {
     };
 
     useEffect(() => {
-        fetchMessages().then((data) => {
-            setMessages(data);
-        });
-    }, [userId, chatId]);
+        const interval = setInterval(() => {
+            fetchMessages().then((data) => {
+                setMessages(data);
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -50,15 +57,18 @@ const Chat = ({userId, chatId}:Props) => {
             // Send the message to the server
             const message = { user: 'me', text: inputValue };
             try {
-                const response = await fetch(`http://localhost:3000/messages?user_id=${userId}&chat_id=${chatId}`, {
+                const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(message),
+                    body: JSON.stringify({
+                        user_id: userId,
+                        nickname: nickname,
+                        chat_id: chatId,
+                        message: inputValue
+                    }),
                 });
                 if (response.ok) {
                     // Add the message to the list of messages
-                    const newMessage = await response.json();
-                    setMessages([...messages, newMessage]);
+                    setMessages([inputValue, ...messages]);
 
                     // Clear the input value
                     setInputValue('');
@@ -88,7 +98,7 @@ const Chat = ({userId, chatId}:Props) => {
                     hitArea={hitArea}
                     pointerdown={handleKeyDown}
                 />
-                <Text text={inputValue} x={160} y={555}/>
+                <TextField id={"input"} label={"Write message"} value={inputValue} onChange={handleInputChange}/>
             </Container>
         </Stage>
     );
