@@ -4,7 +4,6 @@ import uuid
 import openai
 import os
 
-
 from response.ChatUsersResponse import ChatUsersResponse
 from request.LeaveChatRequest import LeaveChatRequest
 from request.CreateChatRequest import CreateChatRequest
@@ -17,10 +16,11 @@ from response.LeaveChatResponse import LeaveChatResponse
 from starlette import status
 from starlette.responses import JSONResponse
 from tagging import tag_chat
+from typing import List
 
 from request.MoveRequest import MoveRequest
 from request.WriteMessageRequest import WriteMessageRequest
-from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud
+from response.MapStateResponse import MapStateResponse, User, UserInChat, ChatCloud, ArchiveChat
 from response.UserLoginResponse import UserLoginResponse
 
 openai.api_key = os.environ.get("OPENAI_API")
@@ -109,9 +109,9 @@ async def get_map_state(user_id: str) -> MapStateResponse:
     LAST_ITEM = -1
 
     users_response = []
-    for user_id, user_dict in users.items():
+    for user_identifier, user_dict in users.items():
         user = User(
-            id=user_id,
+            id=user_identifier,
             x=user_dict["x"],
             y=user_dict["y"],
             status=user_dict["status"],
@@ -120,27 +120,29 @@ async def get_map_state(user_id: str) -> MapStateResponse:
         users_response.append(user)
 
     chat_clouds = []
+    text_in_cloud = ""
     for chat_id, chat_dict in chats.items():
         can_access = True
         if chat_dict["is_private"] and user_id not in chat_dict["user_ids"].keys():
             can_access = False
 
         if can_access:
-            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
+            if chat_dict["messages"]:
+                text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
         else:
             text_in_cloud = "..."
 
         users_in_chat = []
         cloud_x = 0
         cloud_y = 0
-        for user_id, is_active in chat_dict["users_ids"].items():
+        for user_identifier, is_active in chat_dict["users_ids"].items():
             user_in_chat = UserInChat(
-                id=user_id,
+                id=user_identifier,
                 isActive=is_active,
             )
             users_in_chat.append(user_in_chat)
-            cloud_x = users[user_id]["x"]
-            cloud_y = users[user_id]["y"]
+            cloud_x = users[user_identifier]["x"]
+            cloud_y = users[user_identifier]["y"]
 
         chat_cloud = ChatCloud(
             chat_id=chat_id,
@@ -188,8 +190,8 @@ async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
 
 @app.post("/createchat")
 async def create_chat(create_chat_request: CreateChatRequest):
-    if users[create_chat_request.user_id2]["status"] != "Don't disturb":
-        new_chat_id = uuid.uuid4()
+    if create_chat_request.user_id2 in users.keys() and users[create_chat_request.user_id2]["status"] != "Don't disturb":
+        new_chat_id = str(uuid.uuid4())
         chats[new_chat_id] = {"users_ids": {create_chat_request.user_id1: True, create_chat_request.user_id2: True},
                               "active_users_count": 2, "messages": [],
                               "is_private": create_chat_request.is_private}
@@ -225,7 +227,8 @@ def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
 
     if chat["active_users_count"] == 0:
         # delete chat and archive conversation and remove it from current chats
-        tag = tag_chat(chat)
+        chat_messages = merge_messages(chat_id)
+        tag = tag_chat(chat_messages)
         tagged_chats = archive.get(tag, dict())
         tagged_chats[chat_id] = chat
         archive[tag] = tagged_chats
@@ -240,3 +243,20 @@ async def user_login(user_id: str):
         if user_id in chats[chat_id]["users_ids"] and chats[chat_id]["users_ids"][user_id]:
             return ChatUsersResponse(chat_id=chat_id)
     return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
+
+
+@app.get("/archive/{user_id}")
+async def get_archive_chats(user_id: str) -> List[ArchiveChat]:
+    archive_chats = []
+
+    for tag, chats in archive.items():
+        for chat_id, chat in chats.items():
+            if not (chat["is_private"] and user_id not in chat["users_ids"].keys()):
+                archive_chats.append(
+                    ArchiveChat(
+                        chat_id=chat_id,
+                        tags=[tag]
+                    )
+                )
+
+    return archive_chats

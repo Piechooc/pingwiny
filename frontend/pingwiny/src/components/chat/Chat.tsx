@@ -17,35 +17,34 @@ const Chat = ({user, chatId, nickname}: Props) => {
     const [messages, setMessages] = useState<Message[]>([{user_id: '234', nickname: 'me', message: 'aaauuu'}]);
     const [inputValue, setInputValue] = useState<string>('');
 
-    // const fetchMessages = async () => {
-    //     try {
-    //         const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
-    //             method: 'POST',
-    //             body: JSON.stringify({
-    //                 user_id: userId,
-    //                 chat_id: chatId,
-    //             })
-    //         })
+    const fetchMessages = async () => {
+        try {
+            const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    user_id: user.id,
+                    chat_id: chatId,
+                })
+            })
 
-    //         if (response.ok) {
-    //             console.log(response);
-    //             return response.json();
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert('Error: ' + error)
-    //     }
-    // };
+            if (response.ok) {
+                console.log(response);
+                return response.json();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         fetchMessages().then((data) => {
-    //             setMessages(data);
-    //         });
-    //     }, 1000);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetchMessages().then((data) => {
+                setMessages(data);
+            });
+        }, 1000);
 
-    //     return () => clearInterval(interval);
-    // }, []);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -60,32 +59,32 @@ const Chat = ({user, chatId, nickname}: Props) => {
         }, ...messages]);
             // Send the message to the server
 
-            // try {
-            //     const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
-            //         method: 'POST',
-            //         body: JSON.stringify({
-            //             user_id: userId,
-            //             nickname: nickname,
-            //             chat_id: chatId,
-            //             message: inputValue
-            //         }),
-            //     });
-            //     if (response.ok) {
-            //         // Add the message to the list of messages
-            //         setMessages([{
-            //             user_id: userId,
-            //             nickname: nickname,
-            //             message: inputValue
-            //         }, ...messages]);
+            try {
+                const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user_id: user.id,
+                        nickname: nickname,
+                        chat_id: chatId,
+                        message: inputValue
+                    }),
+                });
+                if (response.ok) {
+                    // Add the message to the list of messages
+                    setMessages([{
+                        user_id: user.id,
+                        nickname: nickname,
+                        message: inputValue
+                    }, ...messages]);
 
-            //         // Clear the input value
-            //         setInputValue('');
-            //     } else {
-            //         console.error(`Failed to send message: ${response.status} ${response.statusText}`);
-            //     }
-            // } catch (error) {
-            //     console.error(error);
-            // }
+                    // Clear the input value
+                    setInputValue('');
+                } else {
+                    console.error(`Failed to send message: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error(error);
+            }
 
     };
 
