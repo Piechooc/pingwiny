@@ -24,7 +24,8 @@ interface Props{
 const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, showArchiveList, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
-
+    const [archiveCoords, setArchiveCoords] = useState({x: window.innerWidth * 0.45, y: 20});
+    
     const handleArchiveButtonClick = () => {
 
         const chatArchiveList: ArchiveList[] = [
@@ -125,11 +126,10 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
     
     useEffect(() => {
         const archiveProximityCheck = setInterval(() => {
-            const dx = user.x - 1100;
-            const dy = user.y - 20;
+            const dx = user.x - archiveCoords.x;
+            const dy = user.y - archiveCoords.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            setShowArchiveButton(distance < 100);
-            // setShowArchiveList = showArchiveButton;
+            setShowArchiveButton(distance < 50);
         }, 200);
 
         return () => {
@@ -139,7 +139,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
 
 
     return (
-    <Stage width={window.innerWidth*0.7} height={window.innerHeight*0.9} options={{ backgroundColor: "e0ebeb", antialias: true }}>
+    <Stage width={window.innerWidth*0.6} height={window.innerHeight*0.9} options={{ backgroundColor: "e0ebeb", antialias: true }}>
         {desks.map((desk, index)=>
         <Graphics
         key={index}
@@ -188,7 +188,7 @@ const Map = ({desks, user, setUser, setShowArchiveList, setChatArchiveList, show
                     }}
                 />
             )}
-        <ChatArchiveObject showButton={showArchiveButton} handleButtonClick={handleArchiveButtonClick}/>
+        <ChatArchiveObject showButton={showArchiveButton} user={user} archiveCoords={archiveCoords} handleButtonClick={handleArchiveButtonClick}/>
         </Stage>
     )
 }

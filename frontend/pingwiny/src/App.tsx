@@ -57,7 +57,7 @@ export const App = ({desks, clouds}:Props) =>
   return (
     <>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
-          <div style={{display: 'flex', }}>
+          <div style={{display: 'flex', maxHeight:"90vh"}}>
             <div style={{justifyContent: 'flex-start'}}>
               {user ? (!showArchiveList ? (chat ? <Chat user={user} chatId={chat.id} nickname={user.nickname}/> : null) : <ArchiveObject chatArchiveList={chatArchiveList}/>) : null}
             </div>
