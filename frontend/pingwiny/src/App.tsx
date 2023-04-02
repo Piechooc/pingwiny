@@ -6,6 +6,7 @@ import Map from  './components/map/Map';
 import LoginPage from './components/login/LoginPage';
 import { useState } from 'react';
 import User from './types/User';
+import Chat from "./components/chat/Chat";
 interface Props{
   desks: Desk[],
 }
@@ -16,10 +17,15 @@ export const App = ({desks}:Props) =>
 
   return (
     <>
-      {user===undefined ? <LoginPage  setUser={setUser}/> :           
-        <div style={{display: 'flex', justifyContent: 'flex-end' }}>
-            <Map desks={desks} user={user}/>
-        </div>}
+      {user===undefined ? <LoginPage  setUser={setUser}/> :
+      <div style={{display: 'flex'}}>
+          <div style={{justifyContent: 'flex-start' }}>
+              <Chat userId={user.id} chatId={user.id}/>
+          </div>
+          <div style={{justifyContent: 'flex-end' }}>
+              <Map desks={desks} user={user}/>
+          </div>
+      </div>}
     </>
   );
 };

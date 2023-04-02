@@ -18,7 +18,7 @@ const Map = ({desks, user}:Props) => {
     ]
 
     return (
-    <Stage width={1100} height={750} options={{ backgroundColor: "e0ebeb", antialias: true }}>
+    <Stage width={window.innerWidth*0.8} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
         {desks.map((desk, index)=>
         <Graphics
         key={index}
