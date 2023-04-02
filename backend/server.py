@@ -142,7 +142,7 @@ async def get_map_state(user_id) -> MapStateResponse:
     )
 
 
-@app.get("/getchat/{getChatRequest}")
+@app.post("/getchat")
 async def get_chat(get_chat_request: GetChatRequest):
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
