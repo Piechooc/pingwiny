@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Container, Graphics, Stage, Text} from '@pixi/react';
 import {Rectangle} from 'pixi.js';
 import {TextField} from "@mui/material";
-import user from "../../types/User";
+import Button from "@mui/material/Button";
 
 interface Message {
     user_id: string
@@ -54,8 +54,8 @@ const Chat = ({userId, chatId, nickname}:Props) => {
         setInputValue(e.target.value);
     };
 
-    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+    const handleKeyDown = async (event: any) => {
+        event.preventDefault();
             // Send the message to the server
             try {
                 const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
@@ -83,27 +83,19 @@ const Chat = ({userId, chatId, nickname}:Props) => {
             } catch (error) {
                 console.error(error);
             }
-        }
+
     };
 
-    const hitArea = new Rectangle(0, 0, 500, 30);
-
     return (
-        <Stage width={window.innerWidth*0.3} height={window.innerHeight*0.9}>
+        <div>
                 {messages?.map((message, index) => (
                     <Text key={index} text={`${message.nickname}: ${message.message}`} y={index * 30} />
                 ))}
-                <Graphics
-                    height={30}
-                    width={500}
-                    x={150}
-                    y={550}
-                    interactive
-                    hitArea={hitArea}
-                    pointerdown={handleKeyDown}
-                />
-                <TextField id={"input"} label={"Write message"} value={inputValue} onChange={handleInputChange}/>
-        </Stage>
+            <form onSubmit={handleKeyDown} style={{display: "flex", flexDirection: "column"}}>
+                <TextField  id="outlined-basic" style={{margin:"10px"}} label="Write message" type="text" value={inputValue} onChange={handleInputChange}/>
+                <Button variant="contained" style={{margin:"10px"}} type="submit" >Send!</Button>
+            </form>
+        </div>
     );
 };
 
