@@ -20,7 +20,7 @@ interface Props{
 export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
-
+  const [showArchiveList, setShowArchiveList] = useState(false);
 
   const chatArchiveList: ChatArchive[] = [
         {name: "test", tags: "smth"},
@@ -42,20 +42,24 @@ export const App = ({desks, clouds}:Props) =>
         {name: "test", tags: "smth"},
         {name: "test2", tags: "smth2"}
   ]
-  let show_archive_list = true
+
+  // const handleArchiveButtonClick = () => {
+  //     setShowArchiveList={true}
+  // };
+
 
   return (
     <>
       {user===undefined ? <LoginPage  setUser={setUser}/> :
         <div style={{display: 'flex', justifyContent: 'flex-end' }}>
           <div style={{justifyContent: 'flex-start'}}>
-            {!show_archive_list ?
+            {!showArchiveList ?
               <Chat userId={user.id} chatId={user.id}/> :
               <ArchiveObject chatList={chatArchiveList}/>
             }
           </div>
           <div style={{justifyContent: 'flex-end'}}>
-              <Map desks={desks} user={user} setUser={setUser} clouds={clouds}/>
+              <Map desks={desks} user={user} setUser={setUser} setShowArchiveList={setShowArchiveList} showArchiveList={showArchiveList} clouds={clouds}/>
           </div>
         </div>}
       {user ? (<div style={{display:"flex"}}>

@@ -14,12 +14,18 @@ interface Props{
     desks: Desk[],
     user: User,
     setUser: Dispatch<User>,
+    setShowArchiveList: Dispatch<boolean>,
+    showArchiveList: boolean,
     clouds: Cloud[]
   }
 
-const Map = ({desks, user, setUser, clouds}:Props) => {
+const Map = ({desks, user, setUser, setShowArchiveList, showArchiveList, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
     const [showArchiveButton, setShowArchiveButton] = useState(false);
+
+    const handleArchiveButtonClick = () => {
+      showArchiveList ? setShowArchiveList(false) : setShowArchiveList(true)
+    };
 
 
     useEffect(() => {
@@ -50,12 +56,19 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
             const dy = user.y - 20;
             const distance = Math.sqrt(dx * dx + dy * dy);
             setShowArchiveButton(distance < 100);
+            // setShowArchiveList = showArchiveButton;
         }, 200);
 
         return () => {
             clearInterval(archiveProximityCheck);
         };
     }, [user]);
+
+
+  // const handleArchiveButtonClick = () => {
+  //
+  //   console.log("Start talking")
+  // };
 
     return (
     <Stage width={window.innerWidth*0.7} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
@@ -107,7 +120,7 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
                     }}
                 />
             )}
-        <ChatArchiveObject showButton={showArchiveButton}/>
+        <ChatArchiveObject showButton={showArchiveButton} handleButtonClick={handleArchiveButtonClick}/>
         </Stage>
     )
 }

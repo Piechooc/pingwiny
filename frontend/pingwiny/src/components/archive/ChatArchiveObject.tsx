@@ -2,15 +2,16 @@ import {Sprite} from '@inlet/react-pixi';
 import {Texture} from 'pixi.js';
 
 import ArchiveImg from './BlackSoul.png';
-import talkButton from "../penguins/talkButton.png";
+import archiveButton from "./button.png";
 import React from "react";
 
 type Props = {
-    showButton: boolean
+    showButton: boolean,
+    handleButtonClick: () => void
 };
 
 
-const ChatArchiveObject = ({showButton}: Props) => {
+const ChatArchiveObject = ({showButton, handleButtonClick}: Props) => {
     return (
         <>
             <Sprite
@@ -20,12 +21,12 @@ const ChatArchiveObject = ({showButton}: Props) => {
                 texture={Texture.from(ArchiveImg)}
             />
             {showButton ? <Sprite
-                texture={Texture.from(talkButton)}
+                texture={Texture.from(archiveButton)}
                 x={1080}
                 y={60}
                 scale={{x: 0.4, y: 0.4}}
                 interactive={true}
-                // pointerdown={handleButtonClick}
+                pointerdown={handleButtonClick}
             /> : null}
         </>
     );
