@@ -16,7 +16,7 @@ interface Props{
 export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
-  const [chat, setChat] = useState<ChatType>({id: "1", messages: []});
+  const [chat, setChat] = useState<ChatType>();
 
   return (
     <>
