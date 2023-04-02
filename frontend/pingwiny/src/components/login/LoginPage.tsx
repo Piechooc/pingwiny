@@ -17,20 +17,19 @@ const LoginPage = ({setUser}:Props) => {
     const handleSubmit = (event: any) => {
         event.preventDefault();
         setUser({nickname, id: "1", x: 100, y: 100});
-        // fetch('/api/nickname', {
-        // method: 'POST',
-        // body: JSON.stringify({ nickname }),
-        // headers: {
-        //     'Content-Type': 'application/json'
-        //     }})
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data)
-        //         setUser(data);})
-        //     .catch(error => {
-        //     console.error(error);
-        //     alert('Error: ' + error)
-        //     });
+
+        fetch('http://penguins-agh-rest.azurewebsites.net/userlogin/' + nickname, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            setUser(data);
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Error: ' + error)
+        });
     };
 
     return (

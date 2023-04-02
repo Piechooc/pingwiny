@@ -24,7 +24,6 @@ const MyPenguin = ({ user, otherPenguins, setUser, handleButtonClick, showButton
     };
   }, []);
 
-
   useEffect(() => {
     // Calculate the distance between MyPenguin and each Penguin
     setUser({x: spritePosition.x, y: spritePosition.y, nickname: user.nickname, id: user.id})

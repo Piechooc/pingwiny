@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uuid
 import openai
 import os
@@ -46,30 +47,38 @@ archive = {}
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/userlogin/{nickname}")
 async def user_login(nickname: str) -> UserLoginResponse:
-    new_id = uuid.uuid4()
+    new_id = str(uuid.uuid4())
     users[new_id] = {"nickname": nickname, "x": 0, "y": 0}
     return UserLoginResponse(id=new_id, nickname=nickname, x=0, y=0, status="available")
 
 
-@app.put("/updatestatus")
-async def update_status(update_status_request: UpdateStatusRequest):
+@app.put("/updatestatus/{updateStatusRequest}")
+async def update_status(update_status_request: UpdateStatusRequest) -> JSONResponse:
     users[update_status_request.user_id]["status"] = update_status_request.status
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
 @app.put("/move/{moveRequest}")
-async def move(move_request: MoveRequest):
+async def move(move_request: MoveRequest) -> JSONResponse:
     users[move_request.id]["x"] = move_request.x
     users[move_request.id]["y"] = move_request.y
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.get("/getmapstate")
-async def get_map_state(user_id):
-    MAX_LENGTH_IN_CLOUD = 20
+@app.get("/getmapstate/{userId}")
+async def get_map_state(user_id) -> MapStateResponse:
+    MAX_LENGTH_IN_CLOUD = 10
     LAST_ITEM = -1
 
     users_response = []
@@ -90,23 +99,29 @@ async def get_map_state(user_id):
             can_access = False
 
         if can_access:
-            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD]
+            text_in_cloud = chat_dict["messages"][LAST_ITEM]["message"][:MAX_LENGTH_IN_CLOUD] + "..."
         else:
             text_in_cloud = "..."
 
         users_in_chat = []
+        cloud_x = 0
+        cloud_y = 0
         for user_id, is_active in chat_dict["users_ids"].items():
             user_in_chat = UserInChat(
                 id=user_id,
                 isActive=is_active,
             )
             users_in_chat.append(user_in_chat)
+            cloud_x = users[user_id]["x"]
+            cloud_y = users[user_id]["y"]
 
         chat_cloud = ChatCloud(
             chat_id=chat_id,
             users_in_chat=users_in_chat,
             can_access=can_access,
             text_in_cloud=text_in_cloud,
+            x=cloud_x,
+            y=cloud_y,
         )
         chat_clouds.append(chat_cloud)
 
@@ -116,8 +131,8 @@ async def get_map_state(user_id):
     )
 
 
-@app.get("/getchat")
-async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse:
+@app.get("/getchat/{getChatRequest}")
+async def get_chat(get_chat_request: GetChatRequest):
     chat = chats[get_chat_request.chat_id]
     if not (chat["is_private"] and get_chat_request.user_id not in chat["users_ids"].keys()):
         return GetChatResponse(msg=chat["messages"])
@@ -125,8 +140,8 @@ async def get_chat(get_chat_request: GetChatRequest) -> GetChatResponse:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content="not ok")
 
 
-@app.put("/joinchat")
-async def join_chat(join_chat_request: JoinChatRequest):
+@app.put("/joinchat/{joinChatRequest}")
+async def join_chat(join_chat_request: JoinChatRequest) -> JSONResponse:
     chat = chats[join_chat_request.chat_id]
     if not chat["is_private"]:
         chat["users_ids"][join_chat_request.user_id] = True
@@ -134,8 +149,8 @@ async def join_chat(join_chat_request: JoinChatRequest):
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
 
 
-@app.post("/createchat")
-async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatResponse:
+@app.post("/createchat/{createChatRequest}")
+async def create_chat(create_chat_request: CreateChatRequest):
     if users[create_chat_request.user_id2]["status"] != "not disturb":
         new_chat_id = uuid.uuid4()
         chats[new_chat_id] = {"users_ids": {create_chat_request.user_id1: True, create_chat_request.user_id2: True},
@@ -146,7 +161,7 @@ async def create_chat(create_chat_request: CreateChatRequest) -> CreateChatRespo
 
 
 @app.put("/writemessage/{writeMessageRequest}")
-async def write_msg(write_message_request: WriteMessageRequest):
+async def write_msg(write_message_request: WriteMessageRequest) -> JSONResponse:
     chat = chats[write_message_request.chat_id]
     chat["messages"].append({"user-id": write_message_request.user_id, "message": write_message_request.message})
     return JSONResponse(status_code=status.HTTP_200_OK, content="ok")
@@ -159,7 +174,7 @@ def merge_messages(chat_id: str):
     return chat
 
 
-@app.put("/leavechat")
+@app.put("/leavechat/{leaveChatRequest}")
 def leave_chat(leave_request: LeaveChatRequest) -> LeaveChatResponse:
     user_id, chat_id = leave_request.user_id, leave_request.chat_id
     chat = chats[chat_id]
