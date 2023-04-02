@@ -8,6 +8,7 @@ import Penguin from '../penguins/Penguin';
 import Cloud from "../../types/Cloud";
 import { Text } from '@pixi/react';
 import PenguinsContainer from '../penguins/PenguinsContainer';
+import ChatArchiveObject from "../archive/ChatArchiveObject";
 
 interface Props{
     desks: Desk[],
@@ -18,6 +19,8 @@ interface Props{
 
 const Map = ({desks, user, setUser, clouds}:Props) => {
     const [penguinUsers, setPenguinUsers] = useState<User[]>([]);
+    const [showArchiveButton, setShowArchiveButton] = useState(false);
+
 
     useEffect(() => {
         const penguinsUpdateInterval = setInterval(() => {
@@ -39,6 +42,20 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
             clearInterval(penguinsUpdateInterval);
         };
     }, []);
+    
+    
+    useEffect(() => {
+        const archiveProximityCheck = setInterval(() => {
+            const dx = user.x - 1100;
+            const dy = user.y - 20;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            setShowArchiveButton(distance < 100);
+        }, 200);
+
+        return () => {
+            clearInterval(archiveProximityCheck);
+        };
+    }, [user]);
 
     return (
     <Stage width={window.innerWidth*0.7} height={window.innerHeight} options={{ backgroundColor: "e0ebeb", antialias: true }}>
@@ -90,6 +107,7 @@ const Map = ({desks, user, setUser, clouds}:Props) => {
                     }}
                 />
             )}
+        <ChatArchiveObject showButton={showArchiveButton}/>
         </Stage>
     )
 }

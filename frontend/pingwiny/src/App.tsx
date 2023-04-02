@@ -9,6 +9,8 @@ import User from './types/User';
 import StatusButton from "./components/status/Status"
 import Cloud from './types/Cloud';
 
+import ArchiveObject from "./components/archive/ChatArchiveList";
+import ChatArchive from "./types/ChatArchive";
 import Chat from "./components/chat/Chat";
 interface Props{
   desks: Desk[],
@@ -19,11 +21,42 @@ export const App = ({desks, clouds}:Props) =>
 {
   const [user, setUser] = useState<User>();
 
+
+  const chatArchiveList: ChatArchive[] = [
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test", tags: "smth"},
+        {name: "test2", tags: "smth2"}
+  ]
+  let show_archive_list = true
+
   return (
     <>
-      {user===undefined ? <LoginPage  setUser={setUser}/> :           
+      {user===undefined ? <LoginPage  setUser={setUser}/> :
         <div style={{display: 'flex', justifyContent: 'flex-end' }}>
-            <Map desks={desks} user={user} setUser={setUser} clouds={clouds}/>
+          <div style={{justifyContent: 'flex-start'}}>
+            {!show_archive_list ?
+              <Chat userId={user.id} chatId={user.id}/> :
+              <ArchiveObject chatList={chatArchiveList}/>
+            }
+          </div>
+          <div style={{justifyContent: 'flex-end'}}>
+              <Map desks={desks} user={user} setUser={setUser} clouds={clouds}/>
+          </div>
         </div>}
       {user ? (<div style={{display:"flex"}}>
         <div>
@@ -36,15 +69,6 @@ export const App = ({desks, clouds}:Props) =>
           <StatusButton status={"Available"} user={user}/>
         </div>
       </div>):null}
-      {user===undefined ? <LoginPage  setUser={setUser}/> :
-      <div style={{display: 'flex'}}>
-          <div style={{justifyContent: 'flex-start' }}>
-              <Chat userId={user.id} chatId={user.id}/>
-          </div>
-          <div style={{justifyContent: 'flex-end' }}>
-              <Map desks={desks} user={user}/>
-          </div>
-      </div>}
     </>
   );
 };
