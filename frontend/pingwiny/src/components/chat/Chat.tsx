@@ -24,6 +24,9 @@ const Chat = ({userId, chatId, nickname}:Props) => {
         try {
             const response = await fetch('http://penguins-agh-rest.azurewebsites.net/getchat/', {
                 method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     user_id: userId,
                     chat_id: chatId,
@@ -60,6 +63,9 @@ const Chat = ({userId, chatId, nickname}:Props) => {
             try {
                 const response = await fetch(`http://penguins-agh-rest.azurewebsites.net/writemessage/`, {
                     method: 'POST',
+                  headers: {
+                   'Content-Type': 'application/json'
+                  },
                     body: JSON.stringify({
                         user_id: userId,
                         nickname: nickname,
