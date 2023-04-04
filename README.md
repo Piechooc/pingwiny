@@ -1,5 +1,7 @@
 # Penguins documentation
 
+The application is available at http://penguins-agh.azurewebsites.net.
+
 Penguins is a project created for an AGH organized hackathon, where the given topic was "games and AI". 
 We were given direct instructions by our client what exactly is expected.
 
