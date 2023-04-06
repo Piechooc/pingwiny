@@ -56,7 +56,7 @@ In case you needed help, you could change your status to Help.
 
 Technologies that were used during development can be divided into two categories, backend and frontend.
 
-The backend application used based on Python 3.10, while the frontend application was based on React.
+The backend application was based on Python 3.10, while the frontend application was based on Typescript and React framework.
 
 #### Backend
 - FastAPI
@@ -67,7 +67,6 @@ The backend application used based on Python 3.10, while the frontend applicatio
 #### Frontend
 - React
 - PixiJS
-- React Redux
 
 ### AI aspect
 
@@ -123,7 +122,8 @@ Following endpoints were implemented:
 
 #### Frontend
 
-The frontend application was written in React with PixiJS and React Redux libraries.
+The frontend application was written in Typescript using React framework and PixiJS which a lightweight library for 2D games.
+Thanks to React and its component-based architecture we have created a scalable application which can be developed in the future.
 
 ### User Interface mockups
 
